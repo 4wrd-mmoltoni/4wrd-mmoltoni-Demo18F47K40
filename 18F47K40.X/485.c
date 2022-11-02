@@ -31,7 +31,7 @@ void Write485_start(uint8_t len)
 uint8_t Received485(void)
 {
     uint8_t n; 
-    if (stime > 20 && Usart485.rx_pointer)
+    if (stime > 27 && Usart485.rx_pointer)
     {
         Usart485.rx_lenbuf = Usart485.rx_pointer;
         Usart485.rx_pointer = 0;

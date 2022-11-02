@@ -34,7 +34,7 @@
 //#include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
 
-#define MAIOR_VERSION       0
+#define MAJOR_VERSION       0
 #define MINOR_VERSION       1       //2 caratteri!
 
 #define KEEPBOOT_MAGICNUMBER        0x55
@@ -49,10 +49,11 @@ typedef enum {
     // < 'A', form 1 to '': debug function ONLY     
     COMM_FNC_SET_485_BRIDGE = 0,
     
-    //STart standard funcition from ASCII 'A'
+    //Start standard funcition from ASCII 'A'
     COMM_FNC_SET_ADDR       = 0x41,     //= 'A' 
     COMM_FNC_GET_ADDR,                  //Non serve (con 1! seriale))
-                
+    
+    //Measuring functions
     COMM_FNC_EXEC_MEASURE,
     COMM_FNC_READ_MEASURE,
     COMM_FNC_GET_DIAG,

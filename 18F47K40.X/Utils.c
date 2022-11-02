@@ -144,19 +144,4 @@ void ConvertMeasureToStr(uint16_t* raw, char* str)
     sprintf(str, "%06ld %06ld %06ld %06ld %06ld %06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
 }
 
-//tests...
-void MAX7219_send(uint8_t reg, uint8_t dat)
-{
-    uint16_t d=(reg<<8)|dat;
-    for (uint8_t i=0; i<16; i++)
-        {
-        if (d & (0x8000>>i))
-            {MAX_DAT_SetHigh();}
-        else
-            {MAX_DAT_SetLow();}
-        MAX_CLK_SetHigh();
-        MAX_CLK_SetLow();
-        }
-    //MAX_LAT_SetHigh();
-    //MAX_LAT_SetLow();    
-}
+

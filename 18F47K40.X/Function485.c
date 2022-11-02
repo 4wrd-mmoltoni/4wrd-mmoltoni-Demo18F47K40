@@ -30,12 +30,7 @@ uint8_t Check485RX()
     
     uint8_t addr    = Usart485.buf485[0];
     uint8_t funct   = Usart485.buf485[1];             //funzione
-    
-    /*
-    if ( (      !(addr == MDB_addr || addr == 0xFF))  
-            &&  !(MDB_addr == '0' && funct == COMM_FNC_SET_485_BRIDGE)  )       //Note: broadcast!
-        return 0;
-    */
+        
             
     if (!(    (addr == MDB_addr)        //ind diretto
           ||  (addr == 0xFF)            //broadcast
@@ -52,6 +47,7 @@ uint8_t Check485RX()
     
     switch (funct)
     {
+        /* DEBUG FUNCTIONS*/
         case COMM_FNC_SET_485_BRIDGE:                 //Forza lo stato dell'ancora: 1 = battezzata, 0 = non.  
             t1 = payload;
             /*
@@ -64,6 +60,7 @@ uint8_t Check485RX()
             answLen += *payl_answ;
             break;
         
+        /* BAPTESIM FUNCTIONS*/
         case COMM_FNC_SET_ADDR:
             if (MDB_addr == '0')                      //Non � inizializzato: devo settarmi
             {
@@ -97,6 +94,7 @@ uint8_t Check485RX()
             t2 = (uint8_t)ErrorVect.bConverter.b;
             *(data++) = (t2>>4) + '0';
             *(data++) = (t2&0x0F) + '0';
+            ErrorVect.bProcessor.b = PCON0;
             t2 = ErrorVect.bProcessor.b;
             *(data++) = (t2>>4) + '0';
             *(data++) = (t2&0x0F) + '0';
@@ -116,19 +114,17 @@ uint8_t Check485RX()
             *(data++) = 'A';
             *(data++) = 'P';
             *(data++) = 'P';
-            *(data++) = MAIOR_VERSION + '0';
+            *(data++) = MAJOR_VERSION + '0';
             *(data++) = MINOR_VERSION/10 + '0';
             *(data++) = MINOR_VERSION%10 + '0';
             answLen += *payl_answ;
             
+            //Temp only!
             IIC_REQ = 1;
             
             break;
         
         case COMM_FNC_SET_STRING:            
-//            ind = START_CONFIG_STR_ADDR;
-//            for (int n = 0; n < payload; n++)
-//                DATAEE_WriteByte(ind++, *(data++));
             WriteConfigSTR(data, payload);
             *payl_answ = 0;
             answLen += *payl_answ;
@@ -136,9 +132,6 @@ uint8_t Check485RX()
             
         case COMM_FNC_GET_STRING:
             *payl_answ = 64;
-//            ind = START_CONFIG_STR_ADDR;
-//            for (int n = 0; n < 64; n++)
-//                *(data++) = DATAEE_ReadByte(ind++);
             ReadConfigSTR(data, *payl_answ);
             answLen += *payl_answ;
             break;
@@ -149,6 +142,7 @@ uint8_t Check485RX()
             answLen += *payl_answ;
             break;
             
+        /*Bootloader only*/
         case COMM_FNC_GOTO_BOOTLOADER:
         	*payl_answ = 0;
             // write to EEPROM!
