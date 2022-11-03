@@ -33,17 +33,19 @@
 
 #include <xc.h> // include processor files - each processor file is guarded. 
 #include "DobleFN_Def.h"
+#include "mcc_generated_files/pin_manager.h"
 
 #define HundredMICROVOLT_STEP_f      (160000.0/65535.0)     //16.000.000/100
 
-
-#define MAX_CLK_SetHigh()       RC3_SetHigh()
-#define MAX_CLK_SetLow()        RC3_SetLow()
-#define MAX_DAT_SetHigh()       RC4_SetHigh()
-#define MAX_DAT_SetLow()        RC4_SetLow()
+#define BAPTESIM_OK     RS485_CMD_SetLow()
+#define BAPTESIM_NOK    RS485_CMD_SetHigh()
 
 
 extern ERRORType   ErrorVect;
+
+void DisplayA(uint8_t val);
+void DisplayB(uint8_t val);
+void ShowAddr(int val);
 
 void InitVars(void);
 void WriteConfigSTR(const uint8_t *buf, uint8_t len);

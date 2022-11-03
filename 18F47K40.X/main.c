@@ -11,7 +11,7 @@
     This is the main file generated using PIC10 / PIC12 / PIC16 / PIC18 MCUs
 
   Description:
-    This header file provides implementations for driver APIs for all modules selected in the GUI.
+    This header file provides implementations for driver APIs for all modules selected in the GUI.1
     Generation Information :
         Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.8
         Device            :  PIC18F47K40
@@ -96,12 +96,11 @@ void main(void)
     
     stime = 0;   
     InitVars();
-    n = _XTAL_FREQ;
+    //  __delay_us(300);
     
-    __delay_us(300);
-    n++;
+//    MDB_addr = '1';     //must remove!
     
-    MDB_addr = '1';     //must remove!
+    ShowAddr(MDB_addr-'0');
     
     char buf[100];
     uint16_t val[6] = {1, 0x300, 0x55, 0x1FF, 0xAaff, 0xFFFF};
@@ -160,6 +159,7 @@ void main(void)
         __delay_ms(1000);
         n++;        
 #else
+        //ShowAddr(MDB_addr-'0');
         
         if (Received485())
         	Write485_start(Usart485.tx_lenbuf);        

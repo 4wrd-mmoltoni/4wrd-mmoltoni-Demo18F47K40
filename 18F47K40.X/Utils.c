@@ -11,6 +11,50 @@ uint8_t     ResetReq = 0;
 ERRORType   ErrorVect;
 
 
+uint8_t Display[] = {
+    0x6F,       //0 ZERO
+    0x06,
+    0xAB,
+    0x8F,
+    0xC6,       //4
+    0xCD,
+    0xED,       //6
+    0x07,
+    0xFF,       //8
+    0xCF,
+
+    0xE7,       //A (10!)
+    0xE9,       //E
+    0xE3,       //P
+    0x6E,       //U 
+    
+    0x00        //OFF
+};
+
+void DisplayA(uint8_t val)
+{
+    val %= sizeof(Display);
+    uint8_t t = Display[val];
+    LATA = t;
+}
+
+void DisplayB(uint8_t val)
+{
+    val %= sizeof(Display);
+    LATD = Display[val];
+}
+
+void ShowAddr(int val)
+{
+    uint8_t i, d;
+    d = val/10;
+    //if (d == 0) d = sizeof(Display)-1;  //turn off
+    i = val%10;
+    DisplayA(d);
+    DisplayB(i);
+}
+
+
 void InitVars(void)
 {
     ResetReq = 0;
@@ -27,16 +71,16 @@ void InitVars(void)
 
     if (PCON0 == 0x34 || PCON0 == 0x3C)              //situaz. normale, ho acceso il sistema!
     {
-        //LED_Blu_SetHigh();          //àncora tirata, situazione da battezzare
-        MDB_addr = '0';               //Ho acceso: l'indirizzo è NULLO (per battesimo
+        BAPTESIM_NOK;                   //àncora tirata, situazione da battezzare
+        MDB_addr = '0';                 //Ho acceso: l'indirizzo è NULLO (per battesimo
         return;
     }
     //else
     if (PCON0bits.NOT_BOR)          //Brown-out    
     {
-        //LED_Blu_SetHigh();          //àncora tirata, situazione da battezzare
-        MDB_addr = '0';               //Ho acceso: l'indirizzo è NULLO (per battesimo
-        PCON0bits.NOT_BOR = 1;
+        BAPTESIM_NOK;                   //àncora tirata, situazione da battezzare
+        MDB_addr = '0';                 //Ho acceso: l'indirizzo è NULLO (per battesimo
+        PCON0bits.NOT_BOR = 1;          //erase bad situation
         return;
     }
     
@@ -46,7 +90,7 @@ void InitVars(void)
         PCON0bits.NOT_RI            //RESET Instruction Flag bit
         )
     {
-        //LED_Blu_SetLow();       //Già battezzato
+        BAPTESIM_OK;                   //àncora rilasciata, battezzato!
         MDB_addr = ReadEEpromMDB_Addr();
         return;
     }
@@ -143,5 +187,7 @@ void ConvertMeasureToStr(uint16_t* raw, char* str)
         val[n] = ConvertMeasure(raw[n]);
     sprintf(str, "%06ld %06ld %06ld %06ld %06ld %06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
 }
+
+
 
 

@@ -43,22 +43,31 @@ uint8_t Check485RX()
     uint8_t *data   = &Usart485.buf485[3];            //ind data in TX/RX  
     uint16_t t1, t2;    //temporary
     
-    uint8_t answLen = 3;                              //minimi caratteri di ritorno: addr, function, payload (anche se 0!)  
+    uint8_t answLen = 3;                              //minimi caratteri di ritorno: addr, function, payload (anche se 0!)
+    static uint8_t bb = 1;
+    static uint8_t aa = 0;
     
     switch (funct)
     {
         /* DEBUG FUNCTIONS*/
         case COMM_FNC_SET_485_BRIDGE:                 //Forza lo stato dell'ancora: 1 = battezzata, 0 = non.  
             t1 = payload;
-            /*
             if (t1 == '0')
-                LED_Blu_SetLow();
+            {
+            	RS485_CMD_SetLow();
+            }
             else
-                LED_Blu_SetHigh();
-            */ 
+            {
+            	RS485_CMD_SetHigh();
+            }
             *payl_answ = 0;
             answLen += *payl_answ;
             break;
+
+        case 1:
+
+
+        	break;
         
         /* BAPTESIM FUNCTIONS*/
         case COMM_FNC_SET_ADDR:
@@ -76,20 +85,21 @@ uint8_t Check485RX()
                 answLen += *payl_answ;
                 MDB_addr = t1;
                 WriteEEpromMDB_Addr(MDB_addr);
-                //LED_Blu_SetLow();                   //�ncora rilasciata, battezzato!
+                BAPTESIM_OK;                          //BATTEZZATO!
+                ShowAddr(MDB_addr-'0');
             }
             else
             {
 //                *(data++) = MDB_addr + '0';          //T2 in formato 2 cifre
 //                *payl_answ = 1;
-//                answLen += *payl_answ;
-            	//NON deve rispondere! risponderà il successivo (se esiste) etc!!!
+//                answLen += *payl_answ;               // debug only!
+                
+            	//NON deve rispondere! risponder� il successivo (se esiste) etc!!!
             	return 0;
             }
             break;
             
         case COMM_FNC_GET_DIAG:
-            //  *(data++) = LED_Blu_GetValue()+'0';
             *(data++) = 0 + '0';
             t2 = (uint8_t)ErrorVect.bConverter.b;
             *(data++) = (t2>>4) + '0';
@@ -104,7 +114,6 @@ uint8_t Check485RX()
             break;
             
         case COMM_FNC_RESET_DIAG:
-            //PCON0 = 0;
             *payl_answ = PCON0;
             answLen += *payl_answ;
             break;
@@ -118,10 +127,6 @@ uint8_t Check485RX()
             *(data++) = MINOR_VERSION/10 + '0';
             *(data++) = MINOR_VERSION%10 + '0';
             answLen += *payl_answ;
-            
-            //Temp only!
-            IIC_REQ = 1;
-            
             break;
         
         case COMM_FNC_SET_STRING:            
@@ -134,25 +139,19 @@ uint8_t Check485RX()
             *payl_answ = 64;
             ReadConfigSTR(data, *payl_answ);
             answLen += *payl_answ;
-            break;
-            
+            break;            
+
+        case COMM_FNC_GOTO_BOOTLOADER:		/*Bootloader only*/
+            // write to EEPROM!
+            DATAEE_WriteByte(BOOTLOADER_KEEPINBOOT_ADDR, KEEPBOOT_MAGICNUMBER);
         case COMM_FNC_REBOOT:
         	*payl_answ = 0;
             ResetRequest();
             answLen += *payl_answ;
             break;
-            
-        /*Bootloader only*/
-        case COMM_FNC_GOTO_BOOTLOADER:
-        	*payl_answ = 0;
-            // write to EEPROM!
-            DATAEE_WriteByte(BOOTLOADER_KEEPINBOOT_ADDR, KEEPBOOT_MAGICNUMBER);
-            ResetRequest();
-            answLen += *payl_answ;
-            break;
 
         default:
-            strcpy(data, "FUNCTION NOT IMPLEMENTED (YET)");
+            strcpy(data, "FUNCTION NOT IMPLEMENTED");
             *payl_answ = strlen(&Usart485.buf485[3]);
             answLen += *payl_answ;
             break;

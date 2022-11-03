@@ -65,18 +65,17 @@ void TMR2_Initialize(void)
 {
     // Set TMR2 to the options selected in the User Interface
 
-    // T2CS LFINTOSC; 
-    T2CLKCON = 0x04;
+    // T2CS HFINTOSC; 
+    T2CLKCON = 0x03;
 
     // T2PSYNC Not Synchronized; T2MODE Software control; T2CKPOL Rising Edge; T2CKSYNC Not Synchronized; 
-    //T2HLT = 0x00;
-    T2HLT = 0x20;	//MLT: sync add
+    T2HLT = 0x00;
 
     // T2RSEL T2CKIPPS pin; 
     T2RST = 0x00;
 
-    // PR2 30; 
-    T2PR = 0x1E;
+    // PR2 255; 
+    T2PR = 0xFF;
 
     // TMR2 0; 
     T2TMR = 0x00;
@@ -90,8 +89,8 @@ void TMR2_Initialize(void)
     // Set Default Interrupt Handler
     TMR2_SetInterruptHandler(TMR2_DefaultInterruptHandler);
 
-    // T2CKPS 1:1; T2OUTPS 1:1; TMR2ON on; 
-    T2CON = 0x80;
+    // T2CKPS 1:32; T2OUTPS 1:4; TMR2ON on; 
+    T2CON = 0xD3;
 }
 
 void TMR2_ModeSet(TMR2_HLT_MODE mode)
@@ -165,16 +164,31 @@ void TMR2_LoadPeriodRegister(uint8_t periodVal)
 
 void TMR2_ISR(void)
 {
+    static volatile unsigned int CountCallBack = 0;
 
     // clear the TMR2 interrupt flag
     PIR4bits.TMR2IF = 0;
 
+    // callback function - called every 1000th pass
+    if (++CountCallBack >= TMR2_INTERRUPT_TICKER_FACTOR)
+    {
+        // ticker function call
+        TMR2_CallBack();
+
+        // reset ticker counter
+        CountCallBack = 0;
+    }
+}
+
+void TMR2_CallBack(void)
+{
+    // Add your custom callback code here
+    // this code executes every TMR2_INTERRUPT_TICKER_FACTOR periods of TMR2
     if(TMR2_InterruptHandler)
     {
         TMR2_InterruptHandler();
     }
 }
-
 
 void TMR2_SetInterruptHandler(void (* InterruptHandler)(void)){
     TMR2_InterruptHandler = InterruptHandler;
@@ -183,7 +197,7 @@ void TMR2_SetInterruptHandler(void (* InterruptHandler)(void)){
 void TMR2_DefaultInterruptHandler(void){
     // add your TMR2 interrupt custom code
     // or set custom function using TMR2_SetInterruptHandler()
-    //LATA ^= 0x01;
+    LATD ^= 0x10;
     //MLT
 }
 

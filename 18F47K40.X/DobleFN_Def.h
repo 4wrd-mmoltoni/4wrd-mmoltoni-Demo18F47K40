@@ -31,7 +31,7 @@
 #ifndef DOBLEFN_DEF_H
 #define	DOBLEFN_DEF_H
 
-//#include <xc.h> // include processor files - each processor file is guarded.  
+#include <xc.h> // include processor files - each processor file is guarded.  
 #include <stdint.h>
 
 #define MAJOR_VERSION       0
@@ -71,9 +71,10 @@ typedef enum {
 	COMM_FNC_SET_STRING,
 	COMM_FNC_GET_STRING,
 	COMM_FNC_GET_STATUS,				//0x50 = 80d = 'P'
+
 	COMM_FNC_REBOOT,
-    COMM_FNC_GOTO_BOOTLOADER,
     //Bootloader only:
+    COMM_FNC_GOTO_BOOTLOADER,
 	COMM_FNC_CLEAR_APPFLASH,
 	COMM_FNC_WRITEFLASH,
     
