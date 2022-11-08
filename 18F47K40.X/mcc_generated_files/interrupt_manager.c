@@ -58,11 +58,7 @@ void  INTERRUPT_Initialize (void)
 void __interrupt() INTERRUPT_InterruptManager (void)
 {
     // interrupt handler
-    if(PIE0bits.TMR0IE == 1 && PIR0bits.TMR0IF == 1)
-    {
-        TMR0_ISR();
-    }
-    else if(INTCONbits.PEIE == 1)
+    if(INTCONbits.PEIE == 1)
     {
         if(PIE3bits.TX1IE == 1 && PIR3bits.TX1IF == 1)
         {
@@ -72,9 +68,9 @@ void __interrupt() INTERRUPT_InterruptManager (void)
         {
             EUSART1_RxDefaultInterruptHandler();
         } 
-        else if(PIE4bits.TMR2IE == 1 && PIR4bits.TMR2IF == 1)
+        else if(PIE4bits.TMR3IE == 1 && PIR4bits.TMR3IF == 1)
         {
-            TMR2_ISR();
+            TMR3_ISR();
         } 
         else if(PIE4bits.TMR1IE == 1 && PIR4bits.TMR1IF == 1)
         {

@@ -14,7 +14,7 @@
     This source file provides APIs for EUSART1.
     Generation Information :
         Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.8
-        Device            :  PIC18F27Q10
+        Device            :  PIC18F47K40
         Driver Version    :  2.1.1
     The generated drivers are tested against the following:
         Compiler          :  XC8 2.36 and above
@@ -48,23 +48,27 @@
   Section: Included Files
 */
 #include "eusart1.h"
-#include "..\485.h"
 
 /**
   Section: Macro Declarations
 */
 
-#define BUF485_SIZE     200
+#define EUSART1_TX_BUFFER_SIZE 8
+#define EUSART1_RX_BUFFER_SIZE 8
 
 /**
   Section: Global Variables
 */
+volatile uint8_t eusart1TxHead = 0;
+volatile uint8_t eusart1TxTail = 0;
+volatile uint8_t eusart1TxBuffer[EUSART1_TX_BUFFER_SIZE];
+volatile uint8_t eusart1TxBufferRemaining;
 
-extern volatile uint32_t stime;
-
-volatile uint8_t buf485[BUF485_SIZE];
-
-volatile eusart1_status_t eusart1RxStatusBuffer;
+volatile uint8_t eusart1RxHead = 0;
+volatile uint8_t eusart1RxTail = 0;
+volatile uint8_t eusart1RxBuffer[EUSART1_RX_BUFFER_SIZE];
+volatile eusart1_status_t eusart1RxStatusBuffer[EUSART1_RX_BUFFER_SIZE];
+volatile uint8_t eusart1RxCount;
 volatile eusart1_status_t eusart1RxLastError;
 
 /**
@@ -99,7 +103,7 @@ void EUSART1_Initialize(void)
     // TX9 8-bit; TX9D 0; SENDB sync_break_complete; TXEN enabled; SYNC asynchronous; BRGH hi_speed; CSRC slave; 
     TX1STA = 0x24;
 
-    // SP1BRGL 20;      //@57600! 
+    // SP1BRGL 21; 
     SP1BRGL = 0x15;
 
     // SP1BRGH 1; 
@@ -111,19 +115,28 @@ void EUSART1_Initialize(void)
     EUSART1_SetErrorHandler(EUSART1_DefaultErrorHandler);
 
     eusart1RxLastError.status = 0;
-    
+
+    // initializing the driver state
+    eusart1TxHead = 0;
+    eusart1TxTail = 0;
+    eusart1TxBufferRemaining = sizeof(eusart1TxBuffer);
+
+    eusart1RxHead = 0;
+    eusart1RxTail = 0;
+    eusart1RxCount = 0;
+
     // enable receive interrupt
     PIE3bits.RC1IE = 1;
 }
 
 bool EUSART1_is_tx_ready(void)
 {
-    return (bool)(PIR3bits.TX1IF && TX1STAbits.TXEN);
+    return (eusart1TxBufferRemaining ? true : false);
 }
 
 bool EUSART1_is_rx_ready(void)
 {
-    return (bool)(PIR3bits.RC1IF);
+    return (eusart1RxCount ? true : false);
 }
 
 bool EUSART1_is_tx_done(void)
@@ -131,92 +144,108 @@ bool EUSART1_is_tx_done(void)
     return TX1STAbits.TRMT;
 }
 
+eusart1_status_t EUSART1_get_last_status(void){
+    return eusart1RxLastError;
+}
+
 uint8_t EUSART1_Read(void)
 {
-    while(!PIR3bits.RC1IF)
+    uint8_t readValue  = 0;
+    
+    while(0 == eusart1RxCount)
     {
     }
 
-    eusart1RxLastError.status = 0;
+    eusart1RxLastError = eusart1RxStatusBuffer[eusart1RxTail];
 
-    if(1 == RC1STAbits.OERR)
+    readValue = eusart1RxBuffer[eusart1RxTail++];
+    if(sizeof(eusart1RxBuffer) <= eusart1RxTail)
     {
-        // EUSART1 error - restart
-
-        RC1STAbits.CREN = 0;
-        RC1STAbits.CREN = 1;
+        eusart1RxTail = 0;
     }
+    PIE3bits.RC1IE = 0;
+    eusart1RxCount--;
+    PIE3bits.RC1IE = 1;
 
-    return RC1REG;
+    return readValue;
 }
 
 void EUSART1_Write(uint8_t txData)
 {
-    while(0 == PIR3bits.TX1IF)
+    while(0 == eusart1TxBufferRemaining)
     {
     }
 
-    TX1REG = txData;    // Write the data byte to the USART.
-}
-
-eusart1_status_t EUSART1_get_last_status(void)
-{
-    return eusart1RxLastError;
+    if(0 == PIE3bits.TX1IE)
+    {
+        TX1REG = txData;
+    }
+    else
+    {
+        PIE3bits.TX1IE = 0;
+        eusart1TxBuffer[eusart1TxHead++] = txData;
+        if(sizeof(eusart1TxBuffer) <= eusart1TxHead)
+        {
+            eusart1TxHead = 0;
+        }
+        eusart1TxBufferRemaining--;
+    }
+    PIE3bits.TX1IE = 1;
 }
 
 
 void EUSART1_Transmit_ISR(void)
 {
-    if (Usart485.tx_pointer < Usart485.tx_lenbuf)
+
+    // add your EUSART1 interrupt custom code
+    if(sizeof(eusart1TxBuffer) > eusart1TxBufferRemaining)
     {
-        TX1REG = Usart485.buf485[Usart485.tx_pointer++];
+        TX1REG = eusart1TxBuffer[eusart1TxTail++];
+        if(sizeof(eusart1TxBuffer) <= eusart1TxTail)
+        {
+            eusart1TxTail = 0;
+        }
+        eusart1TxBufferRemaining++;
     }
-    else 
+    else
     {
-        // torna in ricezione qui? il dato � gi� "uscito"???
-        PIE3bits.TX1IE = 0;     //disable interrupt
-        //LATA |= 0x04;
-        //while (!TX1STAbits.TRMT);
-        //RECEIVE485();
-    }    
+        PIE3bits.TX1IE = 0;
+    }
 }
-
-
-void EUSART1_RxDataHandler485(void){
-    // use this default receive interrupt handler code
-    eusart1RxLastError = eusart1RxStatusBuffer;
-    Usart485.buf485[Usart485.rx_pointer++] = RC1REG;
-    Usart485.rx_pointer %= BUF485_SIZE; 
-    
-    //Reset timer?
-    stime = 0;
-}
-
 
 void EUSART1_Receive_ISR(void)
 {
     
-    eusart1RxStatusBuffer.status = 0;
+    eusart1RxStatusBuffer[eusart1RxHead].status = 0;
 
     if(RC1STAbits.FERR){
-        eusart1RxStatusBuffer.ferr = 1;
+        eusart1RxStatusBuffer[eusart1RxHead].ferr = 1;
         EUSART1_FramingErrorHandler();
     }
 
     if(RC1STAbits.OERR){
-        eusart1RxStatusBuffer.oerr = 1;
+        eusart1RxStatusBuffer[eusart1RxHead].oerr = 1;
         EUSART1_OverrunErrorHandler();
     }
     
-    if(eusart1RxStatusBuffer.status){
+    if(eusart1RxStatusBuffer[eusart1RxHead].status){
         EUSART1_ErrorHandler();
     } else {
-        EUSART1_RxDataHandler485();
+        EUSART1_RxDataHandler();
     }
     
     // or set custom function using EUSART1_SetRxInterruptHandler()
 }
 
+void EUSART1_RxDataHandler(void){
+    // use this default receive interrupt handler code
+    eusart1RxBuffer[eusart1RxHead++] = RC1REG;
+    if(sizeof(eusart1RxBuffer) <= eusart1RxHead)
+    {
+        eusart1RxHead = 0;
+    }
+    eusart1RxCount++;
+}
 
 void EUSART1_DefaultFramingErrorHandler(void){}
 
@@ -229,7 +258,7 @@ void EUSART1_DefaultOverrunErrorHandler(void){
 }
 
 void EUSART1_DefaultErrorHandler(void){
-    EUSART1_RxDataHandler485();
+    EUSART1_RxDataHandler();
 }
 
 void EUSART1_SetFramingErrorHandler(void (* interruptHandler)(void)){

@@ -51,14 +51,13 @@
 #include <xc.h>
 #include "tmr1.h"
 
-
-extern volatile uint32_t stime;
-
 /**
   Section: Global Variables Definitions
 */
 volatile uint16_t timer1ReloadVal;
 void (*TMR1_InterruptHandler)(void);
+
+extern volatile uint32_t stime;
 
 /**
   Section: TMR1 APIs
@@ -85,7 +84,7 @@ void TMR1_Initialize(void)
 
     // Clearing IF flag before enabling the interrupt.
     PIR4bits.TMR1IF = 0;
-
+	
     // Load the TMR value to reload variable
     timer1ReloadVal=(uint16_t)((TMR1H << 8) | TMR1L);
 
@@ -95,8 +94,8 @@ void TMR1_Initialize(void)
     // Set Default Interrupt Handler
     TMR1_SetInterruptHandler(TMR1_DefaultInterruptHandler);
 
-    // CKPS 1:4; nT1SYNC synchronize; TMR1ON enabled; T1RD16 disabled; 
-    T1CON = 0x21;
+    // CKPS 1:4; nT1SYNC do_not_synchronize; TMR1ON disabled; T1RD16 enabled; 
+    T1CON = 0x26;
 }
 
 void TMR1_StartTimer(void)
@@ -174,7 +173,7 @@ void TMR1_ISR(void)
     if(TMR1_InterruptHandler)
     {
         TMR1_InterruptHandler();
-    }
+}
 }
 
 
@@ -185,8 +184,6 @@ void TMR1_SetInterruptHandler(void (* InterruptHandler)(void)){
 void TMR1_DefaultInterruptHandler(void){
     // add your TMR1 interrupt custom code
     // or set custom function using TMR1_SetInterruptHandler()
-    //LATC ^= 0x01;
-    //LATA ^= 0x01;
     stime++;
 }
 
