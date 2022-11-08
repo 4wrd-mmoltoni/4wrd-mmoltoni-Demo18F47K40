@@ -129,7 +129,7 @@ uint8_t Check485RX(void)
             *(data++) = MINOR_VERSION/10 + '0';
             *(data++) = MINOR_VERSION%10 + '0';
             answLen += *payl_answ;
-            ShowAddr(n++);
+            //ShowAddr(n++);
             break;
 #if 1        
         case COMM_FNC_SET_STRING:            
