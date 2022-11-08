@@ -1,7 +1,10 @@
+#include "algorithm.h"
+
+
 //High Order Byte Table
 
 // Table of CRC values for high-order byte 
-#if 1
+#ifdef LOOKUP_TABLE
 static const unsigned char auchCRCHi[] = {
 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 0x01, 0xC0, 
 0x80, 0x41, 0x00, 0xC1, 0x81, 0x40, 0x01, 0xC0, 0x80, 0x41, 
@@ -66,13 +69,11 @@ static const unsigned char auchCRCLo[] = {
 } ;
 
 
-
-
 unsigned short CRC161(const  unsigned char* puchMsg, unsigned long usDataLen)
 {
 	unsigned char uchCRCHi = 0xFF ;	// high CRC byte initialized
 	unsigned char uchCRCLo = 0xFF ;	// low CRC byte initialized
-	unsigned uIndex ;				// will index into CRC lookup table
+	unsigned char uIndex ;				// will index into CRC lookup table
 
 	while (usDataLen--)		// pass through message buffer
 		{
@@ -91,7 +92,7 @@ unsigned short CRC162(const  unsigned char* puchMsg, unsigned long usDataLen, ch
 
     static unsigned char uchCRCHi; // high CRC byte initialized
     static unsigned char uchCRCLo; // low CRC byte initialized
-    unsigned uIndex ;               // will index into CRC lookup table
+    unsigned char uIndex ;               // will index into CRC lookup table
 
     if (init)
     {
@@ -109,7 +110,7 @@ unsigned short CRC162(const  unsigned char* puchMsg, unsigned long usDataLen, ch
 
     return (uchCRCHi << 8 | uchCRCLo) ;
 }
-#endif
+#endif  LOOKUP_TABLE
 
 static void DoCRC(unsigned char bCh, unsigned short *pwCRC16)
 {

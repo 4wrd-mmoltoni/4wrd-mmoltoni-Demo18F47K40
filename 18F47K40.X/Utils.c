@@ -11,7 +11,7 @@ uint8_t     ResetReq = 0;
 ERRORType   ErrorVect;
 
 
-uint8_t Display[] = {
+static const uint8_t Display[] = {
     0x6F,       //0 ZERO
     0x06,
     0xAB,
@@ -31,18 +31,22 @@ uint8_t Display[] = {
     0x00        //OFF
 };
 
+volatile static uint8_t t;
+
 void DisplayA(uint8_t val)
 {
-    val %= sizeof(Display);
-    uint8_t t = Display[val];
-    LATA = t;
+    //val %= sizeof(Display);
+    t = Display[val];
+    do {LATA = t;} while(0);
 }
 
 void DisplayB(uint8_t val)
 {
-    val %= sizeof(Display);
-    LATD = Display[val];
-}
+    //val %= sizeof(Display);
+    t = Display[val];
+    do {LATD = t;} while(0);}
+//#define RS485_CMD_SetHigh()            do { LATCbits.LATC2 = 1; } while(0)
+
 
 void ShowAddr(int val)
 {
@@ -54,7 +58,7 @@ void ShowAddr(int val)
     DisplayB(i);
 }
 
-
+#if 1
 void InitVars(void)
 {
     ResetReq = 0;
@@ -188,6 +192,6 @@ void ConvertMeasureToStr(uint16_t* raw, char* str)
     sprintf(str, "%06ld %06ld %06ld %06ld %06ld %06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
 }
 
-
+#endif
 
 

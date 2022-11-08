@@ -2,6 +2,10 @@
    <usedPackages class="java.util.ArrayList"/>
    <usedClasses class="java.util.TreeMap">
       <entry>
+         <string>CRC</string>
+         <string>class com.microchip.mcc.mcu8.modules.crc.CRC</string>
+      </entry>
+      <entry>
          <string>EUSART1</string>
          <string>class com.microchip.mcc.mcu8.modules.eusart.EUSART</string>
       </entry>
@@ -54,6 +58,394 @@
       <ILibraryFile class="com.microchip.mcc.core.library.BaseLibraryFile" libraryClass="com.microchip.mcc.mcu8.Mcu8PeripheralLibrary" version="1.82.0"/>
    </usedLibraries>
    <tokenMap class="java.util.TreeMap">
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="CRCResultValue"/>
+         <value>0xDD6C</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="CRC_CRCIISRFunction"/>
+         <value>CrcISR</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="CRC_SCANIISRFunction"/>
+         <value>ScannerISR</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="Calculate CRC"/>
+         <value>valid</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="CalculateAction"/>
+         <value>disabled</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="DataWordWidthUI"/>
+         <value>8</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="Initial Value"/>
+         <value>65535</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="Polynomial Value"/>
+         <value>32773</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="PolynomialWordWidthUI"/>
+         <value>16</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="Pre-defined Polynomial"/>
+         <value>disabled</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="Pre-defined Polynomial Values"/>
+         <value>CRC-16</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="Reverse CRC"/>
+         <value>enabled</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="Seed Method"/>
+         <value>Direct</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="Seed Shift Direction"/>
+         <value>shift right</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="XOR Value"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="isSeedDirect"/>
+         <value>true</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CRC" name="isSeedNonZero"/>
+         <value>true</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCACCM" alias="data augmented with 0&apos;s"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCACCM" alias="data not augmented with 0&apos;s"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCBUSY" alias="shifted to accumulator"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCBUSY" alias="shifting in progress"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCEN" alias="disabled"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCEN" alias="enabled"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCFULL" alias="empty"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCFULL" alias="full"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCGO" alias="disabled"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCGO" alias="enabled"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCSHIFTM" alias="shift left"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCSHIFTM" alias="shift right"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANBUSY" alias="In progress"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANBUSY" alias="complete"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANEN" alias="disabled"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANEN" alias="enabled"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANGO" alias="disabled"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANGO" alias="enabled"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANINTM" alias="not affected"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANINTM" alias="overridden"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANINVALID" alias="invalid address"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANINVALID" alias="valid address"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANMODE" alias="Burst mode"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANMODE" alias="Concurrent mode"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANMODE" alias="Peek mode"/>
+         <value>2</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANMODE" alias="Triggered mode"/>
+         <value>3</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANTRIG" settingAlias="SCANTSEL" alias="CLKR"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANTRIG" settingAlias="SCANTSEL" alias="LFINTOSC"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANTRIG" settingAlias="SCANTSEL" alias="TMR0_Overflow"/>
+         <value>2</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANTRIG" settingAlias="SCANTSEL" alias="TMR1_Overflow"/>
+         <value>3</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANTRIG" settingAlias="SCANTSEL" alias="TMR2_postscaled"/>
+         <value>4</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANTRIG" settingAlias="SCANTSEL" alias="TMR3_Overflow"/>
+         <value>5</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANTRIG" settingAlias="SCANTSEL" alias="TMR4_postscaled"/>
+         <value>6</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANTRIG" settingAlias="SCANTSEL" alias="TMR5_Overflow"/>
+         <value>7</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CRC" registerAlias="SCANTRIG" settingAlias="SCANTSEL" alias="TMR6_postscaled"/>
+         <value>8</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="CRCACCH"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="CRCACCL"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="CRCCON0"/>
+         <value>146</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="CRCCON1"/>
+         <value>127</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="CRCDATH"/>
+         <value>255</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="CRCDATL"/>
+         <value>255</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="CRCXORH"/>
+         <value>128</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="CRCXORL"/>
+         <value>5</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="SCANCON0"/>
+         <value>128</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="SCANHADRH"/>
+         <value>255</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="SCANHADRL"/>
+         <value>255</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="SCANHADRU"/>
+         <value>63</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="SCANLADRH"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="SCANLADRL"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="SCANLADRU"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="CRC" registerAlias="SCANTRIG"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCACCM"/>
+         <value>data augmented with 0&apos;s</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCBUSY"/>
+         <value>shifted to accumulator</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCEN"/>
+         <value>enabled</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCFULL"/>
+         <value>empty</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCGO"/>
+         <value>disabled</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="CRCCON0" settingAlias="CRCSHIFTM"/>
+         <value>shift right</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="CRCCON1" settingAlias="CRCDLEN"/>
+         <value>7</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="CRCCON1" settingAlias="CRCPLEN"/>
+         <value>15</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="CRCI" settingAlias="enable"/>
+         <value>disabled</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="CRCI" settingAlias="flag"/>
+         <value>disabled</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="CRCI" settingAlias="order"/>
+         <value>-1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="CRCI" settingAlias="priority"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANBUSY"/>
+         <value>complete</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANEN"/>
+         <value>enabled</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANGO"/>
+         <value>disabled</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANINTM"/>
+         <value>not affected</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANINVALID"/>
+         <value>valid address</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANCON0" settingAlias="SCANMODE"/>
+         <value>Concurrent mode</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANHADRH" settingAlias="HADR"/>
+         <value>255</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANHADRL" settingAlias="HADR"/>
+         <value>255</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANHADRU" settingAlias="HADR"/>
+         <value>63</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANI" settingAlias="enable"/>
+         <value>disabled</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANI" settingAlias="flag"/>
+         <value>disabled</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANI" settingAlias="order"/>
+         <value>-1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANI" settingAlias="priority"/>
+         <value>1</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANLADRH" settingAlias="LADR"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANLADRL" settingAlias="LADR"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANLADRU" settingAlias="LADR"/>
+         <value>0</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="CRC" registerAlias="SCANTRIG" settingAlias="SCANTSEL"/>
+         <value>LFINTOSC</value>
+      </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="EUSART1" name="EUSART1_RCIISRFunction"/>
          <value>RxDefaultInterruptHandler</value>
@@ -1104,7 +1496,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="MSSP1" name="tmr2PeriodValue"/>
-         <value>0</value>
+         <value>0.000004</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="MSSP1" registerAlias="SSPCON1" settingAlias="CKP" alias="Idle:High, Active:Low"/>
@@ -2315,19 +2707,27 @@
          <value>enabled</value>
       </entry>
       <entry>
-         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="T1CKIPPS%aux3"/>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="T0CKIPPS%aux5"/>
+         <value>4</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="T1CKIPPS%aux1"/>
          <value>%DESELECT%</value>
       </entry>
       <entry>
-         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="T1GPPS%aux4"/>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="T1GPPS%aux2"/>
          <value>%DESELECT%</value>
       </entry>
       <entry>
-         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="T3CKIPPS%aux1"/>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="T2INPPS%aux6"/>
          <value>%DESELECT%</value>
       </entry>
       <entry>
-         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="T3GPPS%aux2"/>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="T3CKIPPS%aux3"/>
+         <value>%DESELECT%</value>
+      </entry>
+      <entry>
+         <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="Pin Module" name="T3GPPS%aux4"/>
          <value>%DESELECT%</value>
       </entry>
       <entry>
@@ -8380,7 +8780,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="dependentModuleKey"/>
-         <value>1</value>
+         <value>3</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR1" name="gatePin"/>
@@ -8748,7 +9148,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR3" name="dependentModuleKey"/>
-         <value>1</value>
+         <value>3</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="TMR3" name="gatePin"/>
@@ -9134,7 +9534,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files\mcc.h</file>
-         <hash>7cad64a60cec6100ca5f16e1c5b3ab6f6734a20df056bcfbe438a0731517ae7c</hash>
+         <hash>72a551e53035d1f78aa7c42cf46f1c4202aa1d2d4f09d62143086a45d41252b9</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\device_config.h</file>
@@ -9145,24 +9545,24 @@
          <hash>232a2f02f560990c4895104e350748c482478800943e9aecfe1fe59ab94b5ab7</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\tmr1.h</file>
-         <hash>fa2d44274089a7727b499d66c3906163f4723b0aea5c129a4a169464a559751d</hash>
-      </entry>
-      <entry>
          <file>mcc_generated_files\eusart1.h</file>
          <hash>c7fa87915a38c690dae17e55661c7eb04972bdf9d857b67e6ae86873093d1e61</hash>
+      </entry>
+      <entry>
+         <file>mcc_generated_files\tmr1.h</file>
+         <hash>fa2d44274089a7727b499d66c3906163f4723b0aea5c129a4a169464a559751d</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\examples\i2c1_master_example.c</file>
          <hash>79149672219ff6fa2cb6c656b2ede74c0edf134297cc8f31fbcb49766cd454cf</hash>
       </entry>
       <entry>
-         <file>mcc_generated_files\tmr3.h</file>
-         <hash>940333fc5641f00743a44e9f1fc5aaff92b00bc7a6b4ffcbe031738cd9dfc49d</hash>
-      </entry>
-      <entry>
          <file>main.c</file>
          <hash>7d09a32f49847e4bb7a07fa83325dbd31c4189d97f79c6af885fd8ca7ab40ac2</hash>
+      </entry>
+      <entry>
+         <file>mcc_generated_files\tmr3.h</file>
+         <hash>940333fc5641f00743a44e9f1fc5aaff92b00bc7a6b4ffcbe031738cd9dfc49d</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\device_config.c</file>
@@ -9193,12 +9593,16 @@
          <hash>2ad52328d142cf222d4196a9631ba22cf6ef668c5bf2937411a367539d0cb1a5</hash>
       </entry>
       <entry>
+         <file>mcc_generated_files\crc.c</file>
+         <hash>41ed9a622593919629e67cc6c65b07ebf745bab8d2aa27ba7e934a2e58b0b1f1</hash>
+      </entry>
+      <entry>
          <file>mcc_generated_files\interrupt_manager.c</file>
          <hash>14121df67882f5db50cb931f7c8f915939dbb1955d21b584f1dd6915d860bbb5</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\mcc.c</file>
-         <hash>a74f8286f638c6f6b17d04f83d14708d220f033f9c19cc22052a97fbea8c7542</hash>
+         <hash>bda362ed3939195a63bc0b0d777c32e730c7e583283d5e4ad9d77b355a2893d0</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\memory.h</file>
@@ -9207,6 +9611,10 @@
       <entry>
          <file>mcc_generated_files\i2c1_master.c</file>
          <hash>f09bd2a96cd43e764f4ee48c847e32663b61e49ad1544732c215f98b557fd125</hash>
+      </entry>
+      <entry>
+         <file>mcc_generated_files\crc.h</file>
+         <hash>d0de6fae20980a459e9691201c63183b8cc65fe7fc1876f397937e8ae2642328</hash>
       </entry>
       <entry>
          <file>mcc_generated_files\eusart1.c</file>

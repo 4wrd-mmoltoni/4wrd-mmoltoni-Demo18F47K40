@@ -10,7 +10,7 @@
 //
 //	Global variable - to be exported!
 //
-uint8_t MDB_addr = '0';         //Deve essere 0!
+uint8_t MDB_addr = '1';         //Deve essere 0!
 //uint8_t Baptesim = 0;           //0: default, non assegnato, �ncora tirata
                                 //1: assegnato, �ncora rilasciata
 
@@ -22,9 +22,10 @@ extern char IIC_REQ;
 
 
 //Torna la lunghezza di quanto inviare via COMM ?
-uint8_t Check485RX()
+static uint8_t n = 0; 
+uint8_t Check485RX(void)
 {
-    uint16_t crc = CRC161(Usart485.buf485, (uint8_t)Usart485.rx_lenbuf);
+    uint16_t crc = MDB_CRC(Usart485.buf485, (uint8_t)Usart485.rx_lenbuf);
     if (crc != 0)
         return 0;
     
@@ -78,13 +79,13 @@ uint8_t Check485RX()
                 t2 = *(data+1);
                 t2 -= '0';
                 t1 = (t1*10) + t2 + '0';              //t1 contiene il nuovo indirizzo in ASCII
-                t2 = ReadEEpromMDB_Addr();
+                //t2 = ReadEEpromMDB_Addr();
                 *(data++) = (t2>>4) + '0';
                 *(data++) = (t2&0x0F) + '0';          //T2 in formato 2 cifre
                 *payl_answ = 2;
                 answLen += *payl_answ;
                 MDB_addr = t1;
-                WriteEEpromMDB_Addr(MDB_addr);
+                //WriteEEpromMDB_Addr(MDB_addr);
                 BAPTESIM_OK;                          //BATTEZZATO!
                 ShowAddr(MDB_addr-'0');
             }
@@ -102,6 +103,7 @@ uint8_t Check485RX()
         case COMM_FNC_GET_DIAG:
             *(data++) = 0 + '0';
             t2 = (uint8_t)ErrorVect.bConverter.b;
+            t2 = 0;
             *(data++) = (t2>>4) + '0';
             *(data++) = (t2&0x0F) + '0';
             ErrorVect.bProcessor.b = PCON0;
@@ -127,8 +129,9 @@ uint8_t Check485RX()
             *(data++) = MINOR_VERSION/10 + '0';
             *(data++) = MINOR_VERSION%10 + '0';
             answLen += *payl_answ;
+            ShowAddr(n++);
             break;
-        
+#if 1        
         case COMM_FNC_SET_STRING:            
             WriteConfigSTR(data, payload);
             *payl_answ = 0;
@@ -138,6 +141,7 @@ uint8_t Check485RX()
         case COMM_FNC_GET_STRING:
             *payl_answ = 64;
             ReadConfigSTR(data, *payl_answ);
+            //for (int n = 0; n < *payl_answ; n++)                *(data++) = n + '0';
             answLen += *payl_answ;
             break;            
 
@@ -149,7 +153,7 @@ uint8_t Check485RX()
             ResetRequest();
             answLen += *payl_answ;
             break;
-
+#endif
         default:
             strcpy(data, "FUNCTION NOT IMPLEMENTED");
             *payl_answ = strlen(&Usart485.buf485[3]);
@@ -162,7 +166,7 @@ uint8_t Check485RX()
         return 0;
     
     Usart485.tx_lenbuf = answLen;
-    crc = CRC161((uint8_t*)&Usart485.buf485, (uint8_t)Usart485.tx_lenbuf);
+    crc = MDB_CRC((uint8_t*)&Usart485.buf485, (uint8_t)Usart485.tx_lenbuf);
     Usart485.buf485[Usart485.tx_lenbuf++] = crc>>8;
     Usart485.buf485[Usart485.tx_lenbuf++] = crc;
     

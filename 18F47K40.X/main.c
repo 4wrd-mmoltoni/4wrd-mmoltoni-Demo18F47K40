@@ -11,7 +11,7 @@
     This is the main file generated using PIC10 / PIC12 / PIC16 / PIC18 MCUs
 
   Description:
-    This header file provides implementations for driver APIs for all modules selected in the GUI.1
+    This header file provides implementations for driver APIs for all modules selected in the GUI.
     Generation Information :
         Product Revision  :  PIC10 / PIC12 / PIC16 / PIC18 MCUs - 1.81.8
         Device            :  PIC18F47K40
@@ -41,19 +41,18 @@
     SOFTWARE.
 */
 
-#include <stdio.h>
-#include <string.h>
-
 #include "mcc_generated_files/mcc.h"
 #include "mcc_generated_files/examples/i2c1_master_example.h"
 
-#include "algorithm.h"
+//#include "algorithm.h"
 #include "Utils.h"
+#include "eusart1.h"
+#include "algorithm.h"
 #include "485.h"
 
-#pragma warning disable 520 // suppress annoying 'funtion not used' warnings
-#pragma warning disable 2053 // suppress annoying 'funtion not used' warnings
 
+#pragma warning disable 520         // suppress annoying 'funtion not used' warnings
+#pragma warning disable 2053        // suppress annoying 'funtion not used' warnings
 
 uint32_t    n;
 uint8_t c = 0x33;
@@ -64,9 +63,6 @@ extern uint8_t MDB_addr;        //temporary only!!
 /*
                          Main application
  */
-uint32_t    n;
-char IIC_REQ = 0; 
-
 void main(void)
 {
     // Initialize the device
@@ -90,9 +86,8 @@ void main(void)
     volatile uint8_t reg;
     volatile uint16_t data = 0;
     
-    TMR0_StartTimer();
     TMR1_StartTimer();
-    //TMR2_StartTimer();
+    TMR3_StartTimer();
     
     stime = 0;   
     InitVars();
@@ -130,9 +125,10 @@ void main(void)
     for (int n = 0; n< 1000; n++);                          //1 ms con 2000 cicli
 #endif
     
-    //TRANSMIT485();
+#if 1
+    
     data = I2C1_Read2ByteRegister(0x48, 1);
-    for (n = 0; n < 1000; n++);
+    for (int n = 0; n < 1000; n++);
     //n++;
     //data = 0x8083;
     data = 0x8380;
@@ -140,34 +136,21 @@ void main(void)
     __delay_ms(500);
     data = I2C1_Read2ByteRegister(0x48, 1);
     n = 0;
-
+#endif
+    
     while (1)
     {
         // Add your application code
- 
-#if 0        
-        data = I2C1_Read2ByteRegister(0x48, 0);
-        //Usart485.tx_lenbuf = 0;
-        Usart485.tx_pointer = 0;        
-        // 3.3/32768 = 0,0000625
-        volatile float f = 0.0000625 * (float)data;
-        sprintf(buf, ">>0x%04X = %2.5f.\r\n", data, f);
-        n = strlen(buf);
-        strncpy(Usart485.buf485, buf, n);
-        Usart485.tx_lenbuf = n;
-        Write485_start(Usart485.tx_lenbuf);
-        __delay_ms(1000);
-        n++;        
-#else
-        //ShowAddr(MDB_addr-'0');
-        
+        if (stime >= 10000)
+        {
+            stime = 0;
+            //ShowAddr(n++);
+            //n %=100;            
+        }
         if (Received485())
         	Write485_start(Usart485.tx_lenbuf);        
-        ResetReqExecute();
-                
-        //data++;
-#endif
-        
+        //ResetReqExecute();
+
     }
 }
 /**
