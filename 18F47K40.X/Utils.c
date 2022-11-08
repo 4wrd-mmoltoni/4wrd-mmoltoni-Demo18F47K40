@@ -10,7 +10,7 @@
 uint8_t     ResetReq = 0;
 ERRORType   ErrorVect;
 
-
+#if 0
 static const uint8_t Display[] = {
     0x6F,       //0 ZERO
     0x06,
@@ -30,20 +30,77 @@ static const uint8_t Display[] = {
     
     0x00        //OFF
 };
+#endif
+
+static uint8_t SetDisplay(uint8_t val)
+{
+    switch (val)
+    {
+        case 0:
+        case '0':       return 0x6F;
+        
+        case 1:
+        case '1':       return 0x06;
+
+        case 2:
+        case '2':       return 0xAB;
+
+        case 3:
+        case '3':       return 0x8F;
+
+        case 4:
+        case '4':       return 0xC6;
+
+        case 5:
+        case '5':       return 0xCD;
+
+        case 6:
+        case '6':       return 0xED;
+
+        case 7:
+        case '7':       return 0x07;
+
+        case 8:
+        case '8':       return 0xFF;
+
+        case 9:
+        case '9':       return 0xCF;
+
+
+        case 10:
+        case 'A':       return 0xCF;
+
+        case 11:
+        case 'E':       return 0xCF;
+
+        case 12:
+        case 'P':       return 0xCF;
+
+        case 13:
+        case 'U':       return 0xCF;
+
+        case 14:		return 0x00;
+
+        case '-':
+        default:		return 0x88;		//"-"
+    }    
+}
+
 
 volatile static uint8_t t;
-
 void DisplayA(uint8_t val)
 {
     //val %= sizeof(Display);
-    t = Display[val];
+    //t = Display[val];
+    t = SetDisplay(val);
     do {LATA = t;} while(0);
 }
 
 void DisplayB(uint8_t val)
 {
     //val %= sizeof(Display);
-    t = Display[val];
+    //t = Display[val];
+    t = SetDisplay(val);
     do {LATD = t;} while(0);}
 //#define RS485_CMD_SetHigh()            do { LATCbits.LATC2 = 1; } while(0)
 
@@ -75,15 +132,15 @@ void InitVars(void)
 
     if (PCON0 == 0x34 || PCON0 == 0x3C)              //situaz. normale, ho acceso il sistema!
     {
-        BAPTESIM_NOK;                   //àncora tirata, situazione da battezzare
-        MDB_addr = '0';                 //Ho acceso: l'indirizzo è NULLO (per battesimo
+        BAPTESIM_NOK;                   //ï¿½ncora tirata, situazione da battezzare
+        MDB_addr = '0';                 //Ho acceso: l'indirizzo ï¿½ NULLO (per battesimo
         return;
     }
     //else
     if (PCON0bits.NOT_BOR)          //Brown-out    
     {
-        BAPTESIM_NOK;                   //àncora tirata, situazione da battezzare
-        MDB_addr = '0';                 //Ho acceso: l'indirizzo è NULLO (per battesimo
+        BAPTESIM_NOK;                   //ï¿½ncora tirata, situazione da battezzare
+        MDB_addr = '0';                 //Ho acceso: l'indirizzo ï¿½ NULLO (per battesimo
         PCON0bits.NOT_BOR = 1;          //erase bad situation
         return;
     }
@@ -94,7 +151,7 @@ void InitVars(void)
         PCON0bits.NOT_RI            //RESET Instruction Flag bit
         )
     {
-        BAPTESIM_OK;                   //àncora rilasciata, battezzato!
+        BAPTESIM_OK;                   //ï¿½ncora rilasciata, battezzato!
         MDB_addr = ReadEEpromMDB_Addr();
         return;
     }

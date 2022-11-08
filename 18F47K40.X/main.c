@@ -149,7 +149,7 @@ void main(void)
         }
         if (Received485())
         	Write485_start(Usart485.tx_lenbuf);        
-        //ResetReqExecute();
+        ResetReqExecute();
 
     }
 }
