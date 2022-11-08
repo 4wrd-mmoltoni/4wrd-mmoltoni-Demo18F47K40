@@ -59,6 +59,7 @@ void ResetReqExecute(void);
 
 void ConvertSingleMeasureToStr(uint16_t raw, uint8_t* str);
 void ConvertMeasureToStr(uint16_t* raw, char* str);
+void ConvertBufToStr(const uint8_t* raw, uint8_t* str);
 
 
 // TODO Insert declarations or function prototypes (right here) to leverage 

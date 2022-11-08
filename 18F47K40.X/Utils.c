@@ -70,15 +70,15 @@ void InitVars(void)
 
     if (PCON0 == 0x34 || PCON0 == 0x3C)              //situaz. normale, ho acceso il sistema!
     {
-        BAPTESIM_NOK;                   //àncora tirata, situazione da battezzare
-        MDB_addr = '0';                 //Ho acceso: l'indirizzo è NULLO (per battesimo
+        BAPTESIM_NOK;                   //ï¿½ncora tirata, situazione da battezzare
+        MDB_addr = '0';                 //Ho acceso: l'indirizzo ï¿½ NULLO (per battesimo
         return;
     }
     //else
     if (PCON0bits.NOT_BOR)          //Brown-out    
     {
-        BAPTESIM_NOK;                   //àncora tirata, situazione da battezzare
-        MDB_addr = '0';                 //Ho acceso: l'indirizzo è NULLO (per battesimo
+        BAPTESIM_NOK;                   //ï¿½ncora tirata, situazione da battezzare
+        MDB_addr = '0';                 //Ho acceso: l'indirizzo ï¿½ NULLO (per battesimo
         PCON0bits.NOT_BOR = 1;          //erase bad situation
         return;
     }
@@ -89,7 +89,7 @@ void InitVars(void)
         PCON0bits.NOT_RI            //RESET Instruction Flag bit
         )
     {
-        BAPTESIM_OK;                   //àncora rilasciata, battezzato!
+        BAPTESIM_OK;                   //ï¿½ncora rilasciata, battezzato!
         MDB_addr = ReadEEpromMDB_Addr();
         return;
     }
@@ -193,6 +193,17 @@ void ConvertMeasureToStr(uint16_t* raw, char* str)
     sprintf(str, "%06ld %06ld %06ld %06ld %06ld %06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
 }
 
-
+void ConvertBufToStr(const uint8_t* raw, uint8_t* str)
+{
+    int32_t val[6];
+    uint8_t n;
+    int16_t *shp;
+    for (n = 0; n < 6; n++)
+    {
+    	shp = (uint16_t*)raw[n*2];
+        val[n] = ConvertMeasure(shp);
+    }
+    sprintf(str, "%06ld %06ld %06ld %06ld %06ld %06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
+}
 
 

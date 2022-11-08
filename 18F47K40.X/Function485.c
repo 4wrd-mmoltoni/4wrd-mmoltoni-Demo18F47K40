@@ -27,7 +27,8 @@ uint8_t Check485RX()
     
     uint8_t addr    = Usart485.buf485[0];
     uint8_t funct   = Usart485.buf485[1];             //funzione
-        
+    uint8_t buf[50];
+    uint8_t n;    
             
     if (!(    (addr == MDB_addr)        //ind diretto
           ||  (addr == 0xFF)            //broadcast
@@ -161,8 +162,12 @@ uint8_t Check485RX()
 
         case COMM_FNC_READ_MEASURE:
         	//start relays multiplexing & read!
-        	*payl_answ = 0;
-        	answLen += *payl_answ;
+        	//uint8_t buf[50];
+            ConvertMeasureToStr(measureVect, buf);
+        	n = strlen(buf);
+        	memcpy(data, buf, n);
+        	*payl_answ = n;
+        	answLen += n;
         	break;
 
 /////////////////////////OTHER//////////////////////////////////////////////////

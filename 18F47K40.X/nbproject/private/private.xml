@@ -5,14 +5,13 @@
         <group>
             <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/main.c</file>
             <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/Function485.c</file>
-            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/mcc_generated_files/tmr2.c</file>
-            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/485.c</file>
             <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/Utils.c</file>
-            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/algorithm.c</file>
+            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/485.c</file>
+            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/Measure.h</file>
             <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/Utils.h</file>
-            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/mcc_generated_files/pin_manager.h</file>
-            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/mcc_generated_files/tmr1.c</file>
-            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/mcc_generated_files/tmr0.c</file>
+            <file>file:/C:/Program%20Files/Microchip/xc8/v2.40/pic/sources/c90/common/xxtofl.c</file>
+            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/mcc_generated_files/interrupt_manager.c</file>
+            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/Measure.c</file>
         </group>
     </open-files>
 </project-private>
