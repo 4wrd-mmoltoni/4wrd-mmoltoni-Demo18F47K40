@@ -1,6 +1,15 @@
-Correzione bug array initialization:
+>>Correzione bug array initialization:
+
 https://www.microchip.com/forums/m965517.aspx
 "Enter +nvmreg in the Project Properties XC8 global options->XC8 Linker->Additional Options->Errata box"
+
+https://www.microchip.com/forums/m964177-p2.aspx#964223
+<<Workaround was OK until I enabled internal EEPROM read/write.
+Had to manually add  NVMCON1bits.NVMREG = 2; after each EEPROM Read/write.>>
+
+
+>>Altro per IIC:
+
 
 https://www.settorezero.com/wordpress/utilizzo-librerie-i2c-generate-dall-mplab-code-configurator-lettura-accelerometro/
 

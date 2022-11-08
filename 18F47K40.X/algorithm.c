@@ -72,7 +72,7 @@ unsigned short CRC161(const  unsigned char* puchMsg, unsigned long usDataLen)
 {
 	unsigned char uchCRCHi = 0xFF ;	// high CRC byte initialized
 	unsigned char uchCRCLo = 0xFF ;	// low CRC byte initialized
-	unsigned uIndex ;				// will index into CRC lookup table
+	unsigned char uIndex ;				// will index into CRC lookup table
 
 	while (usDataLen--)		// pass through message buffer
 		{
@@ -91,7 +91,7 @@ unsigned short CRC162(const  unsigned char* puchMsg, unsigned long usDataLen, ch
 
     static unsigned char uchCRCHi; // high CRC byte initialized
     static unsigned char uchCRCLo; // low CRC byte initialized
-    unsigned uIndex ;               // will index into CRC lookup table
+    unsigned char uIndex ;               // will index into CRC lookup table
 
     if (init)
     {

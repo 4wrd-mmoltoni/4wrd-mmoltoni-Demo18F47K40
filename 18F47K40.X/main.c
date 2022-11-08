@@ -45,11 +45,11 @@
 #include <string.h>
 
 #include "mcc_generated_files/mcc.h"
-#include "mcc_generated_files/examples/i2c1_master_example.h"
 
 #include "algorithm.h"
 #include "Utils.h"
 #include "485.h"
+#include "Measure.h"
 
 #pragma warning disable 520 // suppress annoying 'funtion not used' warnings
 #pragma warning disable 2053 // suppress annoying 'funtion not used' warnings
@@ -65,7 +65,6 @@ extern uint8_t MDB_addr;        //temporary only!!
                          Main application
  */
 uint32_t    n;
-char IIC_REQ = 0; 
 
 void main(void)
 {
@@ -130,16 +129,8 @@ void main(void)
     for (int n = 0; n< 1000; n++);                          //1 ms con 2000 cicli
 #endif
     
-    //TRANSMIT485();
-    data = I2C1_Read2ByteRegister(0x48, 1);
-    for (n = 0; n < 1000; n++);
-    //n++;
-    //data = 0x8083;
-    data = 0x8380;
-    I2C1_Write2ByteRegister(0x48, 1, data);
-    __delay_ms(500);
-    data = I2C1_Read2ByteRegister(0x48, 1);
-    n = 0;
+    InitMeasure();
+    
 
     while (1)
     {
@@ -164,8 +155,9 @@ void main(void)
         if (Received485())
         	Write485_start(Usart485.tx_lenbuf);        
         ResetReqExecute();
+        
+        ExecuteMeasure();
                 
-        //data++;
 #endif
         
     }

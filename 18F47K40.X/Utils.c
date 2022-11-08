@@ -34,8 +34,7 @@ uint8_t Display[] = {
 void DisplayA(uint8_t val)
 {
     val %= sizeof(Display);
-    uint8_t t = Display[val];
-    LATA = t;
+    LATA = Display[val];
 }
 
 void DisplayB(uint8_t val)
@@ -100,11 +99,13 @@ void InitVars(void)
 void WriteEEpromMDB_Addr(uint8_t val)
 {
 	DATAEE_WriteByte(MODBUSADDRES_EEPROM_ADDR, val);
+    NVMCON1bits.NVMREG = 2;
 }
 
 uint8_t ReadEEpromMDB_Addr(void)
 {
 	return DATAEE_ReadByte(MODBUSADDRES_EEPROM_ADDR);
+    NVMCON1bits.NVMREG = 2;
 }
 
 
@@ -116,6 +117,8 @@ void WriteConfigSTR(const uint8_t *buf, uint8_t len)
 
     for(uint8_t n = 0; n < len; n++)
         DATAEE_WriteByte(addr++, buf[n]);
+    
+    NVMCON1bits.NVMREG = 2;
 }
 
 void ReadConfigSTR(uint8_t *buf, uint8_t len)
@@ -126,6 +129,8 @@ void ReadConfigSTR(uint8_t *buf, uint8_t len)
 
     for (uint8_t n = 0; n < len; n++)
         buf[n] = DATAEE_ReadByte(addr++);
+    
+    NVMCON1bits.NVMREG = 2;
 }
 
 

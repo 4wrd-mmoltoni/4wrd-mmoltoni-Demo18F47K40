@@ -4,7 +4,7 @@
 #include "algorithm.h"
 #include "mcc_generated_files/mcc.h"
 #include "Utils.h"
-
+#include "Measure.h"
 #include "DobleFN_Def.h"
 
 //
@@ -17,9 +17,6 @@ uint8_t MDB_addr = '0';         //Deve essere 0!
 //
 //	Local variable
 //
-
-extern char IIC_REQ;
-
 
 //Torna la lunghezza di quanto inviare via COMM ?
 uint8_t Check485RX()
@@ -64,9 +61,18 @@ uint8_t Check485RX()
             answLen += *payl_answ;
             break;
 
-        case 1:
-
-
+        case COMM_FNC_READRAW_MEASURE:
+            if (MeasureBusy())
+            {
+                *payl_answ = 1;
+                *data = 'B';
+            }
+            else
+            {
+                *payl_answ = 6*2;
+                memcpy(data, (char*)&measureVect[0], 6*2);
+            }
+        	answLen += *payl_answ;
         	break;
         
         /* BAPTESIM FUNCTIONS*/
@@ -84,6 +90,7 @@ uint8_t Check485RX()
                 *payl_answ = 2;
                 answLen += *payl_answ;
                 MDB_addr = t1;
+                Usart485.buf485[0] = t1;
                 WriteEEpromMDB_Addr(MDB_addr);
                 BAPTESIM_OK;                          //BATTEZZATO!
                 ShowAddr(MDB_addr-'0');
@@ -114,7 +121,8 @@ uint8_t Check485RX()
             break;
             
         case COMM_FNC_RESET_DIAG:
-            *payl_answ = PCON0;
+            *payl_answ = 1;
+            *(data++) = PCON0;
             answLen += *payl_answ;
             break;
         
@@ -139,7 +147,25 @@ uint8_t Check485RX()
             *payl_answ = 64;
             ReadConfigSTR(data, *payl_answ);
             answLen += *payl_answ;
-            break;            
+            break;
+
+///////////////////////MEASUREMENT/////////////////////////////////////////////
+
+        case COMM_FNC_EXEC_MEASURE:
+        	//start relays multiplexing & read!
+        	t1 = payload;
+        	*payl_answ = 0;
+        	answLen += *payl_answ;
+            StartMeasure();
+        	break;
+
+        case COMM_FNC_READ_MEASURE:
+        	//start relays multiplexing & read!
+        	*payl_answ = 0;
+        	answLen += *payl_answ;
+        	break;
+
+/////////////////////////OTHER//////////////////////////////////////////////////
 
         case COMM_FNC_GOTO_BOOTLOADER:		/*Bootloader only*/
             // write to EEPROM!
