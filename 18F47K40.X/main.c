@@ -49,6 +49,7 @@
 #include "algorithm.h"
 #include "Utils.h"
 #include "485.h"
+#include "Timers.h"
 #include "Measure.h"
 
 #pragma warning disable 520 // suppress annoying 'funtion not used' warnings
@@ -86,21 +87,16 @@ void main(void)
 
     // Disable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptDisable();
-    volatile uint8_t reg;
-    volatile uint16_t data = 0;
     
     TMR0_StartTimer();
     TMR1_StartTimer();
-    TMR2_StartTimer();
+    //TMR2_StartTimer();
     
     stime = 0;   
-    InitVars();
-    //  __delay_us(300);
-    
-//    MDB_addr = '1';     //must remove!
-    
+    InitVars();    
     ShowAddr(MDB_addr-'0');
     
+    /*
     char buf[100];
     uint16_t val[6] = {1, 0x300, 0x55, 0x1FF, 0xAaff, 0xFFFF};
     
@@ -108,6 +104,7 @@ void main(void)
     //printf(buf);
     //size_t nn = strlen(buf);
     buf[50] = 0;    
+     */ 
     
 #if 0
     LATA ^= 0x01;
@@ -129,12 +126,17 @@ void main(void)
     for (int n = 0; n< 1000; n++);                          //1 ms con 2000 cicli
 #endif
     
+    Init_Timers();
     InitMeasure();
+    
+    Timers_SET(TIM_BLINK, 1000000/2);
+    Timers_Start(TIM_BLINK);
     
 
     while (1)
     {
         // Add your application code
+        Handle_Timers();
  
 #if 0        
         data = I2C1_Read2ByteRegister(0x48, 0);
@@ -157,6 +159,12 @@ void main(void)
         ResetReqExecute();
         
         ExecuteMeasure();
+        
+        if (Timer_Is_Expired(TIM_BLINK))
+        {
+            LATD ^= 0x10;
+            Timers_Start(TIM_BLINK);
+        }
                 
 #endif
         

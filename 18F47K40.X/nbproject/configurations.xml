@@ -28,6 +28,7 @@
       <itemPath>algorithm.h</itemPath>
       <itemPath>Function485.h</itemPath>
       <itemPath>Measure.h</itemPath>
+      <itemPath>Timers.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -60,6 +61,7 @@
       <itemPath>Utils.c</itemPath>
       <itemPath>algorithm.c</itemPath>
       <itemPath>Measure.c</itemPath>
+      <itemPath>Timers.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

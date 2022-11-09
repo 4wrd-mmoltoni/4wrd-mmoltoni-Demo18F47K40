@@ -7,6 +7,7 @@
 #include "mcc_generated_files/memory.h"
 #include "mcc_generated_files/examples/i2c1_master_example.h"
 #include "485.h"
+#include "Timers.h"
 
 #include "Measure.h"
 
@@ -14,7 +15,8 @@ static uint16_t data;
 static uint8_t  startMeasureFlag;
 static uint8_t  rele;
 
-int16_t measureVect[6]; 
+int16_t measureVect[6];
+#define RELE_DELAYms    (200000)
 
 static void ClearRele()
 {
@@ -42,7 +44,8 @@ void InitMeasure(void)
     }
     rele = 0;
     ClearRele();
-    startMeasureFlag = 0;    
+    startMeasureFlag = 0;
+    Timers_SET(TIM_MEASURE, (RELE_DELAYms));
 }
 
 void StartMeasure(void)
@@ -60,12 +63,54 @@ void ExecuteMeasure(void)
     if (!startMeasureFlag)
         return;
     
-    uint8_t n;
+    static uint8_t channel;
+    static uint8_t measureStatus;
     uint8_t r = 1;
     uint8_t status = LATB;
     
     status &= 0xC0;     //keep B6 and B7
     
+    if (channel <6)
+    {
+        switch (measureStatus)
+        {
+            case 0:     //init
+                //set channel
+                r = 1 << channel;
+                LATB = (status | r);
+                Timers_Start(TIM_MEASURE);
+                measureStatus = 1;
+                break;
+            case 1:
+                if (Timer_Is_Expired(TIM_MEASURE))
+                    measureStatus = 2;
+                break;
+            case 2: 
+                measureVect[channel] = I2C1_Read2ByteRegister(0x48, 1);
+                channel++;
+                measureStatus = 0;
+                break;
+        }
+    }
+    else
+    {
+        channel = 0;
+        startMeasureFlag = 0;
+    }
+    
+}
+
+void ExecuteMeasure2(void)
+{
+    if (!startMeasureFlag)
+        return;
+    
+    uint8_t n;
+    uint8_t r = 1;
+    uint8_t status = LATB;
+    
+    status &= 0xC0;     //keep B6 and B7
+              
     for (n = 0; n < 6; n++)
     {
         //set channel

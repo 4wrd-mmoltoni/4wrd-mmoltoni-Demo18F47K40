@@ -26,7 +26,7 @@ typedef struct
 
 #define NUM_TIMERS  2
 
-#define TIM_TIMEOUT1  0
+#define TIM_MEASURE  0
 #define TIM_BLINK     1  
 
 

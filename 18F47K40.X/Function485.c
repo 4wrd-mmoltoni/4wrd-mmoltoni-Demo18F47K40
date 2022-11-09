@@ -161,11 +161,19 @@ uint8_t Check485RX()
         	break;
 
         case COMM_FNC_READ_MEASURE:
-        	ConvertMeasureToStr(measureVect, buf);
-        	n = strlen(buf);
-        	memcpy(data, buf, n);
-        	*payl_answ = n;
-        	answLen += n;
+            if (MeasureBusy())
+            {
+                *payl_answ = 1;
+                *data = 'B';
+            }
+            else
+            {
+                ConvertMeasureToStr(measureVect, buf);
+                n = strlen(buf);
+                memcpy(data, buf, n);
+                *payl_answ = n;
+            }
+        	answLen += *payl_answ;
         	break;
 
 /////////////////////////OTHER//////////////////////////////////////////////////
