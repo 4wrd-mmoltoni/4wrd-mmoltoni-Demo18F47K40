@@ -71,7 +71,7 @@ void ExecuteMeasure(void)
         //set channel
         LATB = (status | r);
         //delay channel
-        __delay_ms(300);
+        __delay_ms(30);
         //read
         measureVect[n] = I2C1_Read2ByteRegister(0x48, 1);
         //end!

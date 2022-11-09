@@ -1,4 +1,5 @@
 #include <string.h>
+#include "mcc_generated_files/mcc.h"
 #include "485.h"
 #include "Function485.h"
 
@@ -42,6 +43,7 @@ uint8_t Received485(void)
     if (Usart485.tx_pointer == Usart485.tx_lenbuf && Usart485.tx_pointer != 0 && PIE3bits.TX1IE == 0)
     {
         while (!TX1STAbits.TRMT);
+        //__delay_us(100);
         RECEIVE485();
     }
     return 0;

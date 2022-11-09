@@ -161,9 +161,7 @@ uint8_t Check485RX()
         	break;
 
         case COMM_FNC_READ_MEASURE:
-        	//start relays multiplexing & read!
-        	//uint8_t buf[50];
-            ConvertMeasureToStr(measureVect, buf);
+        	ConvertMeasureToStr(measureVect, buf);
         	n = strlen(buf);
         	memcpy(data, buf, n);
         	*payl_answ = n;

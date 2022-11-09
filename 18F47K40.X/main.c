@@ -91,7 +91,7 @@ void main(void)
     
     TMR0_StartTimer();
     TMR1_StartTimer();
-    //TMR2_StartTimer();
+    TMR2_StartTimer();
     
     stime = 0;   
     InitVars();
