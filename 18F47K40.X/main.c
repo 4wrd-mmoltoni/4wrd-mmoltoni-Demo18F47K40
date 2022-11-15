@@ -129,7 +129,7 @@ void main(void)
     Init_Timers();
     InitMeasure();
     
-    Timers_SET(TIM_BLINK, 1000000/2);
+    Timers_SET(TIM_BLINK, 1000000/3);
     Timers_Start(TIM_BLINK);
     
 

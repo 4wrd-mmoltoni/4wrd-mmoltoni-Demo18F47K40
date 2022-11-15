@@ -12,7 +12,7 @@ uint8_t     ResetReq = 0;
 ERRORType   ErrorVect;
 
 
-uint8_t Display[] = {
+static const uint8_t Display[] = {
     0x6F,       //0 ZERO
     0x06,
     0xAB,
@@ -48,12 +48,10 @@ void ShowAddr(int val)
 {
     uint8_t i, d;
     d = val/10;
-    //if (d == 0) d = sizeof(Display)-1;  //turn off
     i = val%10;
     DisplayA(d);
     DisplayB(i);
 }
-
 
 void InitVars(void)
 {
@@ -148,67 +146,14 @@ void ResetReqExecute(void)
                 RESET();
 }
 
-void Handle485Dir(void)
+uint8_t     nibbleToAsciiHex (uint8_t val)
 {
-#if 0
-    if (direzione TX == 1)
-        if (Usart485.tx_pointer == Usart485.tx_lenbuf)
-            if (EUSART1_is_tx_done())
-                
-      
-#endif     
+    if (val >= 0 && val <= 9)
+        return val + '0';
+    if (val >= 10 && val <= 15)
+        return (val-10) + 'A';
 }
 
-/* 
- *  MISURE! 
- */
-
-// COnverte da misura a microvolt * 100 (decimo di mV)
-int32_t    ConvertMeasure(uint16_t raw)
-{
-    float f = HundredMICROVOLT_STEP_f * (float)raw;
-    return (int32_t)f;
-}
-
-void ConvertSingleMeasureToStr(uint16_t raw, uint8_t* str)
-{
-    uint32_t val = ConvertMeasure(raw);
-    sprintf(str, "%06ld", val);    
-}
-
-
-/*
- * Errore del C di Microchip!
- * Non funziona con la striga sprintf(str, "%06d %06d %06d %06d %06d %06d ", val[0], val[1], val[2], val[3], val[4], val[5]);
- *  (ne fa uno si ed uno no!)
- * neppure con strcat e sprintf(str, "%06u ", val[0]);
- * non sistema correttamente gli interi a 32 bit, li tratta come 16 e siccome sono unsigned sbaglia :-( 
- */
-
-void ConvertMeasureToStr(uint16_t* raw, char* str)
-{
-    int32_t val[6];
-    uint8_t n;    
-    for (n = 0; n < 6; n++)
-        val[n] = ConvertMeasure(raw[n]);
-    sprintf(str, "%06ld %06ld %06ld %06ld %06ld %06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
-}
-
-void ConvertBufToStr(const uint8_t* raw, uint8_t* str)
-{
-    int32_t val[6];
-    uint8_t n;
-    int16_t *shp;
-    for (n = 0; n < 6; n++)
-    {
-    	shp = (uint16_t*)raw[n*2];
-        val[n] = ConvertMeasure(shp);
-    }
-    sprintf(str, "%06ld %06ld %06ld %06ld %06ld %06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
-}
-
-
-//void FLASH_ReadSector(uint8_t *buf, uint32_t flashAddr)
 
 void testfnc()
 {

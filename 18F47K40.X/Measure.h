@@ -33,12 +33,19 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 
+//#define HundredMICROVOLT_STEP_f      (160000.0/65535.0)     //16.000.000/100
+#define HundredMICROVOLT_STEP_f      (20480.0/65535.0)     //16.000.000/100
+
 extern int16_t measureVect[6]; 
 
 void InitMeasure(void);
 void StartMeasure(void);
 uint8_t MeasureBusy(void);
 void ExecuteMeasure(void);
+
+void ConvertSingleMeasureToStr(uint16_t raw, uint8_t* str);
+void ConvertMeasureToStr(uint16_t* raw, char* str);
+void ConvertBufToStr(const uint8_t* raw, uint8_t* str);
 
 #ifdef	__cplusplus
 extern "C" {

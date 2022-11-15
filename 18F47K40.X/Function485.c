@@ -85,13 +85,12 @@ uint8_t Check485RX()
                 t2 -= '0';
                 t1 = (t1*10) + t2 + '0';              //t1 contiene il nuovo indirizzo in ASCII
                 t2 = ReadEEpromMDB_Addr();
-                *(data++) = (t2>>4) + '0';
-                *(data++) = (t2&0x0F) + '0';          //T2 in formato 2 cifre
-                *payl_answ = 2;
+                *(data++) = t2;
+                *payl_answ = 1;
                 answLen += *payl_answ;
                 MDB_addr = t1;
                 Usart485.buf485[0] = t1;
-                WriteEEpromMDB_Addr(MDB_addr);
+                WriteEEpromMDB_Addr(MDB_addr-'0');
                 BAPTESIM_OK;                          //BATTEZZATO!
                 ShowAddr(MDB_addr-'0');
             }
@@ -155,7 +154,11 @@ uint8_t Check485RX()
             t1  = *(data++);
             t1 <<= 8;
             t1 |= *(data++);
-            t2 = FLASH_WriteBlock(t1, data);
+            t2 = 0;
+            if (payload == 2)
+            	FLASH_EraseBlock(t1);
+            else
+            	t2 = FLASH_WriteBlock(t1, data);
             *p = (uint8_t)t2;
             *payl_answ = 1;
             answLen += *payl_answ;
@@ -168,7 +171,7 @@ uint8_t Check485RX()
             t2  = *(data++);
             t2 <<= 8;
             t2 |= *(data++);        //length
-            t2 += t1;               //end point per il ciclo for più sotto
+            t2 += t1;               //end point per il ciclo for piï¿½ sotto
             CRC162(buf, 256, 1);    //erase value
             for (n = t1; n <= t2; n += 0x80)
             {

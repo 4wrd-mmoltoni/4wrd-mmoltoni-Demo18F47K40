@@ -24,10 +24,11 @@ typedef struct
     uint32_t u32_reload;
 }FREE_TIMER;
 
-#define NUM_TIMERS  2
+#define NUM_TIMERS  3
 
-#define TIM_MEASURE  0
-#define TIM_BLINK     1  
+#define TIM_BLINK       0  
+#define TIM_MEASURE     1
+#define TIM_MEASDELAY   2
 
 
 void Init_Timers(void);

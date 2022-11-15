@@ -11,12 +11,18 @@
 
 #include "Measure.h"
 
+#define RELE_DELAYms    (100000)    // (is in micro seconds us)
+#define MIS_DELAY       (1000)      // tra uan misura e l'altra
+#define NUM_MEASURE     8           // Numero misure per media
+
+
 static uint16_t data;
 static uint8_t  startMeasureFlag;
 static uint8_t  rele;
 
-int16_t measureVect[6];
-#define RELE_DELAYms    (100000)    //(is in micro seconds us)
+int16_t            measureVect[6];
+static int32_t     sumMeasure; 
+static uint16_t    mediaMisure[NUM_MEASURE];
 
 static void ClearRele()
 {
@@ -46,6 +52,7 @@ void InitMeasure(void)
     ClearRele();
     startMeasureFlag = 0;
     Timers_SET(TIM_MEASURE, (RELE_DELAYms));
+    Timers_SET(TIM_MEASDELAY, (MIS_DELAY));
 }
 
 void StartMeasure(void)
@@ -58,6 +65,7 @@ uint8_t MeasureBusy(void)
     return startMeasureFlag;
 }
 
+/* Macchina a stati per lesecuzione non interrompente della misura */
 void ExecuteMeasure(void)
 {
     if (!startMeasureFlag)
@@ -65,10 +73,11 @@ void ExecuteMeasure(void)
     
     static uint8_t channel;
     static uint8_t measureStatus;
+    static uint8_t nmeasure;
     uint8_t r = 1;
-    uint8_t status = LATB;
+    uint8_t status;    
     
-    status &= 0xC0;     //keep B6 and B7
+    status = LATB & 0xC0;     //keep B6 and B7
     
     if (channel <6)
     {
@@ -77,18 +86,36 @@ void ExecuteMeasure(void)
             case 0:     //init
                 //set channel
                 r = 1 << channel;
-                LATB = (status | r);
+                LATB = (status | r);            //set relè channel
                 Timers_Start(TIM_MEASURE);
                 measureStatus = 1;
+                nmeasure = 0;                
                 break;
             case 1:
                 if (Timer_Is_Expired(TIM_MEASURE))
                     measureStatus = 2;
+                nmeasure = 0;
+                sumMeasure = 0;
                 break;
             case 2: 
-                measureVect[channel] = I2C1_Read2ByteRegister(0x48, 0);
+                measureStatus = 3;
+                mediaMisure[nmeasure] = I2C1_Read2ByteRegister(0x48, 0);
+                sumMeasure += mediaMisure[nmeasure];
+                //measureVect[channel] = I2C1_Read2ByteRegister(0x48, 0);
+                if (++nmeasure >= NUM_MEASURE)
+                    measureStatus = 4;
+                else
+                    Timers_Start(TIM_MEASDELAY);                
+                break;
+            case 3:
+                if (Timer_Is_Expired(TIM_MEASDELAY))
+                    measureStatus = 2;
+                break;                
+                
+            case 4:
+                measureVect[channel] = sumMeasure/NUM_MEASURE;
                 channel++;
-                measureStatus = 0;
+                measureStatus = 0;                
                 break;
         }
     }
@@ -100,27 +127,38 @@ void ExecuteMeasure(void)
     
 }
 
-void ExecuteMeasureOLD(void)
+// Converte da misura a microvolt * 100 (decimo di mV)
+int32_t    ConvertMeasure(uint16_t raw)
 {
-    if (!startMeasureFlag)
-        return;
-    
+    float f = HundredMICROVOLT_STEP_f * (float)raw;
+    return (int32_t)f;
+}
+
+void ConvertSingleMeasureToStr(uint16_t raw, uint8_t* str)
+{
+    uint32_t val = ConvertMeasure(raw);
+    sprintf(str, "%06ld", val);    
+}
+
+
+void ConvertMeasureToStr(uint16_t* raw, char* str)
+{
+    int32_t val[6];
+    uint8_t n;    
+    for (n = 0; n < 6; n++)
+        val[n] = ConvertMeasure(raw[n]);
+    sprintf(str, "%06ld %06ld %06ld %06ld %06ld %06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
+}
+
+void ConvertBufToStr(const uint8_t* raw, uint8_t* str)
+{
+    int32_t val[6];
     uint8_t n;
-    uint8_t r = 1;
-    uint8_t status = LATB;
-    
-    status &= 0xC0;     //keep B6 and B7
-              
+    int16_t *shp;
     for (n = 0; n < 6; n++)
     {
-        //set channel
-        LATB = (status | r);
-        //delay channel
-        __delay_ms(30);
-        //read
-        measureVect[n] = I2C1_Read2ByteRegister(0x48, 1);
-        //end!
-        r <<= 1;
+    	shp = (uint16_t*)raw[n*2];
+        val[n] = ConvertMeasure(shp);
     }
-    startMeasureFlag = 0;
+    sprintf(str, "%06ld %06ld %06ld %06ld %06ld %06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
 }

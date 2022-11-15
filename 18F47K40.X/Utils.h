@@ -35,8 +35,6 @@
 #include "DobleFN_Def.h"
 #include "mcc_generated_files/pin_manager.h"
 
-//#define HundredMICROVOLT_STEP_f      (160000.0/65535.0)     //16.000.000/100
-#define HundredMICROVOLT_STEP_f      (20480.0/65535.0)     //16.000.000/100
 
 #define BAPTESIM_OK     RS485_CMD_SetLow()
 #define BAPTESIM_NOK    RS485_CMD_SetHigh()
@@ -50,20 +48,18 @@ void FLASH_ReadSector64k(uint8_t *buf, uint16_t flashAddr);
 void DisplayA(uint8_t val);
 void DisplayB(uint8_t val);
 void ShowAddr(int val);
+uint8_t     nibbleToAsciiHex (uint8_t val);
 
 void InitVars(void);
 void WriteConfigSTR(const uint8_t *buf, uint8_t len);
 void ReadConfigSTR(uint8_t *buf, uint8_t len);
 void WriteEEpromMDB_Addr(uint8_t val);
 uint8_t ReadEEpromMDB_Addr(void);
-void Handle485Dir(void);
 
 void ResetRequest(void);
 void ResetReqExecute(void);
 
-void ConvertSingleMeasureToStr(uint16_t raw, uint8_t* str);
-void ConvertMeasureToStr(uint16_t* raw, char* str);
-void ConvertBufToStr(const uint8_t* raw, uint8_t* str);
+
 
 void testfnc();
 
