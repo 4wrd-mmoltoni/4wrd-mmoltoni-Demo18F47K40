@@ -31,7 +31,9 @@
 #ifndef DOBLEFN_DEF_H
 #define	DOBLEFN_DEF_H
 
-#include <xc.h> // include processor files - each processor file is guarded.  
+#ifndef  INC_VCL
+#include <xc.h> // include processor files - each processor file is guarded.
+#endif  
 #include <stdint.h>
 
 #define MAJOR_VERSION       0
@@ -49,6 +51,7 @@ typedef enum {
     // < 'A', form 1 to '': debug function ONLY     
     COMM_FNC_SET_485_BRIDGE = 0,
 	COMM_FNC_READRAW_MEASURE,
+    COMM_FNC_CUSTOM1,
     
     //Start standard funcition from ASCII 'A'
     COMM_FNC_SET_ADDR       = 0x41,     //= 'A' 
@@ -78,6 +81,7 @@ typedef enum {
     COMM_FNC_GOTO_BOOTLOADER,
 	COMM_FNC_CLEAR_APPFLASH,
 	COMM_FNC_WRITEFLASH,
+    COMM_FNC_CALCCRC,
     
 } COMM_FNC;
 

@@ -27,8 +27,8 @@ uint8_t Check485RX()
     
     uint8_t addr    = Usart485.buf485[0];
     uint8_t funct   = Usart485.buf485[1];             //funzione
-    uint8_t buf[50];
-    uint8_t n;    
+    uint8_t buf[256];
+    uint16_t n;    
             
     if (!(    (addr == MDB_addr)        //ind diretto
           ||  (addr == 0xFF)            //broadcast
@@ -38,12 +38,11 @@ uint8_t Check485RX()
             
     uint8_t payload = Usart485.buf485[2];             //payload in ricezione  
     uint8_t *payl_answ = &Usart485.buf485[2];         //ind payload in risposta  
-    uint8_t *data   = &Usart485.buf485[3];            //ind data in TX/RX  
-    uint16_t t1, t2;    //temporary
+    uint8_t *data   = &Usart485.buf485[3];            //ind data in TX/RX
+    uint8_t *p = data;                                //temporary data pointer
+    uint16_t t1, t2;                                  //temporary
     
     uint8_t answLen = 3;                              //minimi caratteri di ritorno: addr, function, payload (anche se 0!)
-    static uint8_t bb = 1;
-    static uint8_t aa = 0;
     
     switch (funct)
     {
@@ -149,6 +148,38 @@ uint8_t Check485RX()
             ReadConfigSTR(data, *payl_answ);
             answLen += *payl_answ;
             break;
+            
+/////////////////////BOOTLOADER - TEST!////////////////////////////////////////            
+            
+        case COMM_FNC_WRITEFLASH:
+            t1  = *(data++);
+            t1 <<= 8;
+            t1 |= *(data++);
+            t2 = FLASH_WriteBlock(t1, data);
+            *p = (uint8_t)t2;
+            *payl_answ = 1;
+            answLen += *payl_answ;
+            break;
+            
+        case COMM_FNC_CALCCRC:
+            t1  = *(data++);
+            t1 <<= 8;
+            t1 |= *(data++);        //start addr
+            t2  = *(data++);
+            t2 <<= 8;
+            t2 |= *(data++);        //length
+            t2 += t1;               //end point per il ciclo for più sotto
+            CRC162(buf, 256, 1);    //erase value
+            for (n = t1; n <= t2; n += 0x80)
+            {
+                FLASH_ReadSector64k(buf, n);
+                crc = CRC162(buf, 128, 0);
+            }
+            *(p++) = crc>>8;
+            *(p++) = crc;
+            *payl_answ = 2;
+            answLen += *payl_answ;
+            break;
 
 ///////////////////////MEASUREMENT/////////////////////////////////////////////
 
@@ -184,6 +215,12 @@ uint8_t Check485RX()
         case COMM_FNC_REBOOT:
         	*payl_answ = 0;
             ResetRequest();
+            answLen += *payl_answ;
+            break;
+            
+        case COMM_FNC_CUSTOM1:
+            *payl_answ = 0;
+            testfnc();
             answLen += *payl_answ;
             break;
 

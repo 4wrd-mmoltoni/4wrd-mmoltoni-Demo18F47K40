@@ -35,13 +35,17 @@
 #include "DobleFN_Def.h"
 #include "mcc_generated_files/pin_manager.h"
 
-#define HundredMICROVOLT_STEP_f      (160000.0/65535.0)     //16.000.000/100
+//#define HundredMICROVOLT_STEP_f      (160000.0/65535.0)     //16.000.000/100
+#define HundredMICROVOLT_STEP_f      (20480.0/65535.0)     //16.000.000/100
 
 #define BAPTESIM_OK     RS485_CMD_SetLow()
 #define BAPTESIM_NOK    RS485_CMD_SetHigh()
 
 
 extern ERRORType   ErrorVect;
+
+void FLASH_ReadSector(uint8_t *buf, uint32_t flashAddr);
+void FLASH_ReadSector64k(uint8_t *buf, uint16_t flashAddr);
 
 void DisplayA(uint8_t val);
 void DisplayB(uint8_t val);
@@ -61,6 +65,7 @@ void ConvertSingleMeasureToStr(uint16_t raw, uint8_t* str);
 void ConvertMeasureToStr(uint16_t* raw, char* str);
 void ConvertBufToStr(const uint8_t* raw, uint8_t* str);
 
+void testfnc();
 
 // TODO Insert declarations or function prototypes (right here) to leverage 
 // live documentation

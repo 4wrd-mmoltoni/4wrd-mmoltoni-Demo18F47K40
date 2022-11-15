@@ -573,6 +573,26 @@
 #define DISP1_G_SetAnalogMode()      do { ANSELDbits.ANSELD7 = 1; } while(0)
 #define DISP1_G_SetDigitalMode()     do { ANSELDbits.ANSELD7 = 0; } while(0)
 
+// get/set IO_RE2 aliases
+#define IO_RE2_TRIS                 TRISEbits.TRISE2
+#define IO_RE2_LAT                  LATEbits.LATE2
+#define IO_RE2_PORT                 PORTEbits.RE2
+#define IO_RE2_WPU                  WPUEbits.WPUE2
+#define IO_RE2_OD                   ODCONEbits.ODCE2
+#define IO_RE2_ANS                  ANSELEbits.ANSELE2
+#define IO_RE2_SetHigh()            do { LATEbits.LATE2 = 1; } while(0)
+#define IO_RE2_SetLow()             do { LATEbits.LATE2 = 0; } while(0)
+#define IO_RE2_Toggle()             do { LATEbits.LATE2 = ~LATEbits.LATE2; } while(0)
+#define IO_RE2_GetValue()           PORTEbits.RE2
+#define IO_RE2_SetDigitalInput()    do { TRISEbits.TRISE2 = 1; } while(0)
+#define IO_RE2_SetDigitalOutput()   do { TRISEbits.TRISE2 = 0; } while(0)
+#define IO_RE2_SetPullup()          do { WPUEbits.WPUE2 = 1; } while(0)
+#define IO_RE2_ResetPullup()        do { WPUEbits.WPUE2 = 0; } while(0)
+#define IO_RE2_SetPushPull()        do { ODCONEbits.ODCE2 = 0; } while(0)
+#define IO_RE2_SetOpenDrain()       do { ODCONEbits.ODCE2 = 1; } while(0)
+#define IO_RE2_SetAnalogMode()      do { ANSELEbits.ANSELE2 = 1; } while(0)
+#define IO_RE2_SetDigitalMode()     do { ANSELEbits.ANSELE2 = 0; } while(0)
+
 /**
    @Param
     none

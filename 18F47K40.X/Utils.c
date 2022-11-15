@@ -5,6 +5,7 @@
 #include "mcc_generated_files/mcc.h"
 #include "mcc_generated_files/memory.h"
 #include "485.h"
+#include "algorithm.h"
 
 
 uint8_t     ResetReq = 0;
@@ -207,3 +208,103 @@ void ConvertBufToStr(const uint8_t* raw, uint8_t* str)
 }
 
 
+//void FLASH_ReadSector(uint8_t *buf, uint32_t flashAddr)
+
+void testfnc()
+{
+    //test functions...
+    
+    //Write a 128 byte buffer*2
+    uint32_t addr = 0x0000;
+    uint32_t n = 0;
+    uint8_t b;
+    uint16_t w;
+    //addr -= 256;
+    
+    IO_RE2_SetLow();
+    
+    //IO_RE2_SetHigh();
+    //FLASH_EraseBlock(addr);
+    //FLASH_EraseBlock(addr+128);
+    IO_RE2_SetLow();
+    uint8_t buf[256] = {0};
+    
+    __delay_ms(1);
+    memset(buf, 1, sizeof(buf));
+    
+    addr = 0;
+    IO_RE2_SetHigh();
+    
+    //CRC162(NULL, 0, 1);
+    uint16_t crc16;
+    for (n = addr; n <= 0xFFFF; n += 256)
+    {
+        //FLASH_ReadSector(buf, n);
+        FLASH_ReadSector64k(buf, n);
+        crc16 = CRC162(buf, 256, 0);
+    }
+    
+    /*for (n = 0; n < 256; n++)
+    {
+        buf[n] = FLASH_ReadByte(addr+n);
+        //w = FLASH_ReadWord(n);
+        if (w != 0xFFFF)
+            w = 0;
+    } 
+    */    
+    IO_RE2_SetLow();
+    
+    for (n = 0; n< 255; n++)
+        if (buf[n] == 0)
+            buf[n] = 55; 
+}
+
+
+
+
+void FLASH_ReadSector64k(uint8_t *buf, uint16_t flashAddr)
+{
+    uint16_t n;
+    
+    NVMCON1bits.NVMREG = 2;
+    //TBLPTRU = (uint8_t)((flashAddr & 0x00FF0000) >> 16);
+    TBLPTRU = 0;
+    TBLPTRH = (uint8_t)((flashAddr)>> 8);
+    TBLPTRL = 0;
+
+    //asm("TBLRD");
+    for (n = 0; n < 256; n++)
+    {
+        asm("TBLRD*+");
+        *(buf++) = (TABLAT);
+        //TBLPTRL++;
+    }
+    //Restore the interrupts
+    //INTCONbits.GIE = GIEBitValue;    
+}
+
+
+void FLASH_ReadSector(uint8_t *buf, uint32_t flashAddr)
+{
+    uint16_t val;
+    uint16_t n;
+    
+    //uint8_t GIEBitValue = INTCONbits.GIE;
+    //Disable all interrupt
+    //INTCONbits.GIE = 0;
+    
+    NVMCON1bits.NVMREG = 2;
+    TBLPTRU = (uint8_t)((flashAddr & 0x00FF0000) >> 16);
+    TBLPTRH = (uint8_t)((flashAddr & 0x0000FF00)>> 8);
+    TBLPTRL = 0;
+
+    //asm("TBLRD");
+    for (n = 0; n < 256; n++)
+    {
+        asm("TBLRD");
+        *(buf++) = (TABLAT);
+        TBLPTRL++;
+    }
+    //Restore the interrupts
+    //INTCONbits.GIE = GIEBitValue;    
+}

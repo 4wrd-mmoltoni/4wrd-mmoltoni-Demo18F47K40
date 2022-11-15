@@ -16,7 +16,7 @@ static uint8_t  startMeasureFlag;
 static uint8_t  rele;
 
 int16_t measureVect[6];
-#define RELE_DELAYms    (200000)
+#define RELE_DELAYms    (100000)    //(is in micro seconds us)
 
 static void ClearRele()
 {
@@ -86,7 +86,7 @@ void ExecuteMeasure(void)
                     measureStatus = 2;
                 break;
             case 2: 
-                measureVect[channel] = I2C1_Read2ByteRegister(0x48, 1);
+                measureVect[channel] = I2C1_Read2ByteRegister(0x48, 0);
                 channel++;
                 measureStatus = 0;
                 break;
@@ -100,7 +100,7 @@ void ExecuteMeasure(void)
     
 }
 
-void ExecuteMeasure2(void)
+void ExecuteMeasureOLD(void)
 {
     if (!startMeasureFlag)
         return;
