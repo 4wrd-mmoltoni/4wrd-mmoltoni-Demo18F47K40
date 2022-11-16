@@ -6,14 +6,10 @@
             <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/main.c</file>
             <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/Function485.c</file>
             <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/Utils.c</file>
-            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/DobleFN_Def.h</file>
-            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/algorithm.c</file>
-            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/Utils.h</file>
+            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/mcc_generated_files/i2c1_master.c</file>
+            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/mcc_generated_files/eusart1.c</file>
             <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/Timers.c</file>
-            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/mcc_generated_files/memory.c</file>
             <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/Measure.c</file>
-            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/mcc_generated_files/memory.h</file>
-            <file>file:/D:/Progetti/MC_PIC/4wrd-mmoltoni-Demo18F47K40/18F47K40.X/mcc_generated_files/tmr0.c</file>
         </group>
     </open-files>
 </project-private>

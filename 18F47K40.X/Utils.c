@@ -89,7 +89,10 @@ void InitVars(void)
         )
     {
         BAPTESIM_OK;                   //�ncora rilasciata, battezzato!
-        MDB_addr = ReadEEpromMDB_Addr();
+        uint8_t n = ReadEEpromMDB_Addr();
+        if (n >= 0 && n < 20)
+            MDB_addr = '0' + n;
+        
         return;
     }
     return;
@@ -143,7 +146,10 @@ void ResetReqExecute(void)
 	if (ResetReq)
 		if (Usart485.tx_pointer == Usart485.tx_lenbuf)
             if (EUSART1_is_tx_done())
+            {
                 RESET();
+                NVMCON1bits.NVMREG = 2;
+            }
 }
 
 uint8_t     nibbleToAsciiHex (uint8_t val)

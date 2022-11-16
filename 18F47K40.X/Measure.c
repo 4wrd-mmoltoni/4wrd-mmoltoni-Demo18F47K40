@@ -12,7 +12,7 @@
 #include "Measure.h"
 
 #define RELE_DELAYms    (100000)    // (is in micro seconds us)
-#define MIS_DELAY       (1000)      // tra uan misura e l'altra
+#define MIS_DELAY       (1000)      // tra una misura e l'altra
 #define NUM_MEASURE     8           // Numero misure per media
 
 
@@ -123,8 +123,49 @@ void ExecuteMeasure(void)
     {
         channel = 0;
         startMeasureFlag = 0;
-    }
+    }    
+}
+
+
+void ExecuteMeasure_nomedia(void)
+{
+    if (!startMeasureFlag)
+        return;
     
+    static uint8_t channel;
+    static uint8_t measureStatus;
+    uint8_t r = 1;
+    uint8_t status = LATB;
+    
+    status &= 0xC0;     //keep B6 and B7
+    
+    if (channel <6)
+    {
+        switch (measureStatus)
+        {
+            case 0:     //init
+                //set channel
+                r = 1 << channel;
+                LATB = (status | r);
+                Timers_Start(TIM_MEASURE);
+                measureStatus = 1;
+                break;
+            case 1:
+                if (Timer_Is_Expired(TIM_MEASURE))
+                    measureStatus = 2;
+                break;
+            case 2: 
+                measureVect[channel] = I2C1_Read2ByteRegister(0x48, 1);
+                channel++;
+                measureStatus = 0;
+                break;
+        }
+    }
+    else
+    {
+        channel = 0;
+        startMeasureFlag = 0;
+    }    
 }
 
 // Converte da misura a microvolt * 100 (decimo di mV)
@@ -137,7 +178,7 @@ int32_t    ConvertMeasure(uint16_t raw)
 void ConvertSingleMeasureToStr(uint16_t raw, uint8_t* str)
 {
     uint32_t val = ConvertMeasure(raw);
-    sprintf(str, "%06ld", val);    
+    sprintf(str, "%+06ld", val);    
 }
 
 
@@ -147,7 +188,7 @@ void ConvertMeasureToStr(uint16_t* raw, char* str)
     uint8_t n;    
     for (n = 0; n < 6; n++)
         val[n] = ConvertMeasure(raw[n]);
-    sprintf(str, "%06ld %06ld %06ld %06ld %06ld %06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
+    sprintf(str, "%+06ld %+06ld %+06ld %+06ld %+06ld %+06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
 }
 
 void ConvertBufToStr(const uint8_t* raw, uint8_t* str)
@@ -160,5 +201,5 @@ void ConvertBufToStr(const uint8_t* raw, uint8_t* str)
     	shp = (uint16_t*)raw[n*2];
         val[n] = ConvertMeasure(shp);
     }
-    sprintf(str, "%06ld %06ld %06ld %06ld %06ld %06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
+    sprintf(str, "%+06ld %+06ld %+06ld %+06ld %+06ld %+06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
 }

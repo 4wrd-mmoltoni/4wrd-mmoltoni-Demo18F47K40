@@ -70,7 +70,12 @@ uint32_t    n;
 void main(void)
 {
     // Initialize the device
+    NVMCON1bits.NVMREG = 2;
     SYSTEM_Initialize();
+    
+    
+    __delay_ms(100);
+    EUSART1_Initialize();
 
     // If using interrupts in PIC18 High/Low Priority Mode you need to enable the Global High and Low Interrupts
     // If using interrupts in PIC Mid-Range Compatibility Mode you need to enable the Global and Peripheral Interrupts
@@ -127,7 +132,7 @@ void main(void)
 #endif
     
     Init_Timers();
-    InitMeasure();
+    //InitMeasure();
     
     Timers_SET(TIM_BLINK, 1000000/3);
     Timers_Start(TIM_BLINK);
@@ -158,7 +163,7 @@ void main(void)
         	Write485_start(Usart485.tx_lenbuf);        
         ResetReqExecute();
         
-        ExecuteMeasure();
+        //ExecuteMeasure();
         
         if (Timer_Is_Expired(TIM_BLINK))
         {
