@@ -33,8 +33,14 @@
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 
-//#define HundredMICROVOLT_STEP_f      (160000.0/65535.0)     //16.000.000/100
-#define HundredMICROVOLT_STEP_f      (20480.0/65535.0)     //16.000.000/100
+#define HundredMICROVOLT_STEP_f      (2.048/32768.0)     //16.000.000/100
+//#define HundredMICROVOLT_STEP_f      (20480.0/65535.0)     //16.000.000/100
+
+#define PARTITORE 8.039301;      //board DOBLE;
+//#define PARTITORE 2.204213;      //board personale;
+
+
+
 
 extern int16_t measureVect[6]; 
 

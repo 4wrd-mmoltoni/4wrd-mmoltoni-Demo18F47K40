@@ -66,7 +66,7 @@ uint8_t MeasureBusy(void)
 }
 
 /* Macchina a stati per lesecuzione non interrompente della misura */
-void ExecuteMeasure(void)
+void ExecuteMeasure_media(void)
 {
     if (!startMeasureFlag)
         return;
@@ -86,7 +86,7 @@ void ExecuteMeasure(void)
             case 0:     //init
                 //set channel
                 r = 1 << channel;
-                LATB = (status | r);            //set relè channel
+                LATB = (status | r);            //set relï¿½ channel
                 Timers_Start(TIM_MEASURE);
                 measureStatus = 1;
                 nmeasure = 0;                
@@ -127,7 +127,7 @@ void ExecuteMeasure(void)
 }
 
 
-void ExecuteMeasure_nomedia(void)
+void ExecuteMeasure(void)
 {
     if (!startMeasureFlag)
         return;
@@ -155,7 +155,7 @@ void ExecuteMeasure_nomedia(void)
                     measureStatus = 2;
                 break;
             case 2: 
-                measureVect[channel] = I2C1_Read2ByteRegister(0x48, 1);
+                measureVect[channel] = I2C1_Read2ByteRegister(0x48, 0);
                 channel++;
                 measureStatus = 0;
                 break;
@@ -171,7 +171,18 @@ void ExecuteMeasure_nomedia(void)
 // Converte da misura a microvolt * 100 (decimo di mV)
 int32_t    ConvertMeasure(uint16_t raw)
 {
-    float f = HundredMICROVOLT_STEP_f * (float)raw;
+	uint8_t sgn = raw>>15;
+	if (sgn)
+	{
+		raw ^= 0xFFFF;
+		raw++;
+	}
+    float f = (HundredMICROVOLT_STEP_f * 10000) * (float)raw;
+
+    f *= PARTITORE;
+
+    if (sgn)
+    	f *= -1.0;
     return (int32_t)f;
 }
 

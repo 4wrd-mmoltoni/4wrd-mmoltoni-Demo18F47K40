@@ -51,6 +51,7 @@ typedef enum {
     // < 'A', form 1 to '': debug function ONLY     
     COMM_FNC_SET_485_BRIDGE = 0,
 	COMM_FNC_READRAW_MEASURE,
+    COMM_FNC_RESET_ADDR,
     COMM_FNC_CUSTOM1,
     
     //Start standard funcition from ASCII 'A'

@@ -45,6 +45,7 @@
 #include <string.h>
 
 #include "mcc_generated_files/mcc.h"
+#include "mcc_generated_files/examples/i2c1_master_example.h"
 
 #include "algorithm.h"
 #include "Utils.h"
@@ -132,46 +133,63 @@ void main(void)
 #endif
     
     Init_Timers();
-    //InitMeasure();
+    InitMeasure();
     
     Timers_SET(TIM_BLINK, 1000000/3);
     Timers_Start(TIM_BLINK);
     
+#if 0    
+    TRANSMIT485();
+    uint16_t data, data2;
+    uint8_t buf[50];
+    volatile uint8_t sgn;
+    for(;;)
+    {
+        data = I2C1_Read2ByteRegister(0x48, 0);
+        data2 = data;
+        //Usart485.tx_lenbuf = 0;
+        sgn = data>>8;
+        sgn  &= 0x80;
+        Usart485.tx_pointer = 0;        
+        // 2.048/32768 = 0,0000625
+        if (sgn)
+        {
+            data ^= 0xFFFF;
+            data++;
+         }
+        volatile float f = 0.0000625 * (float)data;
+        f *= 8.039301;      //board DOBLE;
+        //f *= 2.204213;      //board personale;
+        if (sgn)
+        {
+            f *= -1.0; 
+        }
+        sprintf(buf, ">> 0x%04X = %+2.5f.\r\n", data2, f);
+        n = strlen(buf);
+        strncpy(Usart485.buf485, buf, n);
+        Usart485.tx_lenbuf = n;
+        Write485_start(Usart485.tx_lenbuf);
+        __delay_ms(1000);        
+    }
+    
+#endif    
 
     while (1)
     {
         // Add your application code
         Handle_Timers();
- 
-#if 0        
-        data = I2C1_Read2ByteRegister(0x48, 0);
-        //Usart485.tx_lenbuf = 0;
-        Usart485.tx_pointer = 0;        
-        // 3.3/32768 = 0,0000625
-        volatile float f = 0.0000625 * (float)data;
-        sprintf(buf, ">>0x%04X = %2.5f.\r\n", data, f);
-        n = strlen(buf);
-        strncpy(Usart485.buf485, buf, n);
-        Usart485.tx_lenbuf = n;
-        Write485_start(Usart485.tx_lenbuf);
-        __delay_ms(1000);
-        n++;        
-#else
-        //ShowAddr(MDB_addr-'0');
         
         if (Received485())
         	Write485_start(Usart485.tx_lenbuf);        
         ResetReqExecute();
         
-        //ExecuteMeasure();
+        ExecuteMeasure();
         
         if (Timer_Is_Expired(TIM_BLINK))
         {
             LATD ^= 0x10;
             Timers_Start(TIM_BLINK);
         }
-                
-#endif
         
     }
 }

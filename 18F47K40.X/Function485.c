@@ -74,6 +74,12 @@ uint8_t Check485RX()
             }
         	answLen += *payl_answ;
         	break;
+            
+        case COMM_FNC_RESET_ADDR:
+            MDB_addr = '0';
+            ShowAddr(MDB_addr-'0');
+            BAPTESIM_NOK;
+            return 0;         //COmando BROADCAST o comunque senza risposta. SOlop er debug!
         
         /* BAPTESIM FUNCTIONS*/
         case COMM_FNC_SET_ADDR:
