@@ -44,6 +44,8 @@
 //EEPROM map definitions
 #define BOOTLOADER_KEEPINBOOT_ADDR	0
 #define MODBUSADDRES_EEPROM_ADDR	1
+#define TRESHOLD_L_EEPROM_ADDR      5
+#define TRESHOLD_H_EEPROM_ADDR      6
 #define START_CONFIG_STR_ADDR       512
 
 
@@ -56,31 +58,31 @@ typedef enum {
     
     //Start standard funcition from ASCII 'A'
     COMM_FNC_SET_ADDR       = 0x41,     //= 'A' 
-    COMM_FNC_GET_ADDR,                  //Non serve (con 1! seriale))
+	COMM_FNC_RESET_DIAG,
+	//COMM_FNC_GET_ADDR,                  //Non serve (con 1! seriale))
     
     //Measuring functions
     COMM_FNC_EXEC_MEASURE,
     COMM_FNC_READ_MEASURE,
-    COMM_FNC_GET_DIAG,
-    COMM_FNC_RESET_DIAG,
+    COMM_FNC_GET_DIAG		= 0x45,
+    //COMM_FNC_RESET_DIAG,
 	//Calibration functions
     COMM_FNC_SET_GAIN,
-	COMM_FNC_GET_GAIN,
+	COMM_FNC_GET_GAIN		= 0x47,
 	COMM_FNC_SET_OFFSET_ZERO,
 	COMM_FNC_RESET_OFFSET_ZERO,
-	COMM_FNC_GETROW_ADC_DATA,
-	COMM_FNC_SAVE_COEFF,
-	COMM_FNC_GET_COEFF,
+	COMM_FNC_SAVE_COEFF		= 0x4A,
+	COMM_FNC_GET_COEFF		= 0x4B,
+	COMM_FNC_SET_TRESHOLD	= 0x4C,			//ADD
+	COMM_FNC_GET_TRESHOLD	= 0x4D,
     //Setting and other functions        
 	COMM_FNC_GET_FW_VERSION,
 	COMM_FNC_SET_STRING,
 	COMM_FNC_GET_STRING,
-	COMM_FNC_GET_STATUS,				//0x50 = 80d = 'P'
 
-	COMM_FNC_REBOOT,
+	COMM_FNC_REBOOT			= 0x52,
     //Bootloader only:
     COMM_FNC_GOTO_BOOTLOADER,
-	COMM_FNC_CLEAR_APPFLASH,
 	COMM_FNC_WRITEFLASH,
     COMM_FNC_CALCCRC,
     

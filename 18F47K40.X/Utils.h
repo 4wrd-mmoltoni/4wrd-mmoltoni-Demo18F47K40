@@ -56,6 +56,9 @@ void ReadConfigSTR(uint8_t *buf, uint8_t len);
 void WriteEEpromMDB_Addr(uint8_t val);
 uint8_t ReadEEpromMDB_Addr(void);
 
+uint16_t ReadEEpromTreshold(void);
+void WriteEEpromTreshold(uint16_t);
+
 void ResetRequest(void);
 void ResetReqExecute(void);
 

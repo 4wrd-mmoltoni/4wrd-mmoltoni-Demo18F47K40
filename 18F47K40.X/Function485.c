@@ -112,16 +112,18 @@ uint8_t Check485RX()
             break;
             
         case COMM_FNC_GET_DIAG:
-            *(data++) = 0 + '0';
+            for (n = 0; n < 7; n++)
+                *(data++) =1 + '0';
             t2 = (uint8_t)ErrorVect.bConverter.b;
-            *(data++) = (t2>>4) + '0';
-            *(data++) = (t2&0x0F) + '0';
+            //*(data++) = (t2>>4) + '0';
+            //*(data++) = (t2&0x0F) + '0';
             ErrorVect.bProcessor.b = PCON0;
             t2 = ErrorVect.bProcessor.b;
+#warning CORREGGERE!
             *(data++) = (t2>>4) + '0';
             *(data++) = (t2&0x0F) + '0';
             
-            *payl_answ = 1+2+2;
+            *payl_answ = 7+2;
             answLen += *payl_answ;
             break;
             
@@ -129,6 +131,22 @@ uint8_t Check485RX()
             *payl_answ = 1;
             *(data++) = PCON0;
             answLen += *payl_answ;
+            break;
+            
+        case COMM_FNC_SET_TRESHOLD:
+            t1 = *(data++);
+            t2 = *(data++);
+            treshold = (t2<<8)+t1;
+            // scrivi in flash!
+            *payl_answ = 0;
+            answLen += *payl_answ;
+            break;
+            
+        case COMM_FNC_GET_TRESHOLD:
+            *(data++) = treshold>>8;
+            *(data++) = treshold&0xFF;
+            *payl_answ = 2;
+            answLen += *payl_answ;            
             break;
         
         case COMM_FNC_GET_FW_VERSION:

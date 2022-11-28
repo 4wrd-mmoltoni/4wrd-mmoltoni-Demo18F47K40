@@ -15,6 +15,7 @@
 #define MIS_DELAY       (1000)      // tra una misura e l'altra
 #define NUM_MEASURE     8           // Numero misure per media
 
+uint16_t treshold;
 
 static uint16_t data;
 static uint8_t  startMeasureFlag;
@@ -189,7 +190,7 @@ int32_t    ConvertMeasure(uint16_t raw)
 void ConvertSingleMeasureToStr(uint16_t raw, uint8_t* str)
 {
     uint32_t val = ConvertMeasure(raw);
-    sprintf(str, "%+06ld", val);    
+    sprintf(str, "%+07ld", val);    
 }
 
 
@@ -199,7 +200,7 @@ void ConvertMeasureToStr(uint16_t* raw, char* str)
     uint8_t n;    
     for (n = 0; n < 6; n++)
         val[n] = ConvertMeasure(raw[n]);
-    sprintf(str, "%+06ld %+06ld %+06ld %+06ld %+06ld %+06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
+    sprintf(str, "%+07ld %07ld %+07ld %+07ld %+07ld %+07ld", val[0], val[1], val[2], val[3], val[4], val[5]);    
 }
 
 void ConvertBufToStr(const uint8_t* raw, uint8_t* str)
@@ -212,5 +213,5 @@ void ConvertBufToStr(const uint8_t* raw, uint8_t* str)
     	shp = (uint16_t*)raw[n*2];
         val[n] = ConvertMeasure(shp);
     }
-    sprintf(str, "%+06ld %+06ld %+06ld %+06ld %+06ld %+06ld ", val[0], val[1], val[2], val[3], val[4], val[5]);    
+    sprintf(str, "%+07ld %+07ld %+07ld %+07ld %+07ld %+07ld", val[0], val[1], val[2], val[3], val[4], val[5]);    
 }

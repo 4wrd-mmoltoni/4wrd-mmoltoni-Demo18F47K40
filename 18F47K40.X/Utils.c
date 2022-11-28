@@ -110,6 +110,25 @@ uint8_t ReadEEpromMDB_Addr(void)
     NVMCON1bits.NVMREG = 2;
 }
 
+void WriteEEpromTreshold(uint16_t val)
+{
+	DATAEE_WriteByte(TRESHOLD_L_EEPROM_ADDR, val&&0xFF);
+    NVMCON1bits.NVMREG = 2;
+    DATAEE_WriteByte(TRESHOLD_H_EEPROM_ADDR, val>>8);
+    NVMCON1bits.NVMREG = 2;
+}
+
+uint16_t ReadEEpromTreshold(void)
+{
+	uint16_t    val;
+    val = DATAEE_ReadByte(TRESHOLD_H_EEPROM_ADDR);
+    NVMCON1bits.NVMREG = 2;
+    val <<= 8;
+    val += DATAEE_ReadByte(TRESHOLD_H_EEPROM_ADDR);    
+    NVMCON1bits.NVMREG = 2;
+    return val;
+}
+
 
 void WriteConfigSTR(const uint8_t *buf, uint8_t len)
 {
