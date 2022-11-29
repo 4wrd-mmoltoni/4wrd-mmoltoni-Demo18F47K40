@@ -124,7 +124,7 @@ uint16_t ReadEEpromTreshold(void)
     val = DATAEE_ReadByte(TRESHOLD_H_EEPROM_ADDR);
     NVMCON1bits.NVMREG = 2;
     val <<= 8;
-    val += DATAEE_ReadByte(TRESHOLD_H_EEPROM_ADDR);    
+    val += DATAEE_ReadByte(TRESHOLD_L_EEPROM_ADDR);    
     NVMCON1bits.NVMREG = 2;
     return val;
 }

@@ -37,7 +37,7 @@
 #include <stdint.h>
 
 #define MAJOR_VERSION       0
-#define MINOR_VERSION       1       //2 caratteri!
+#define MINOR_VERSION       2       //2 caratteri!
 
 #define KEEPBOOT_MAGICNUMBER        0x55
 
