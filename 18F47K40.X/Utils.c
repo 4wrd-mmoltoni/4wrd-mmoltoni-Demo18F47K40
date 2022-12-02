@@ -106,8 +106,9 @@ void WriteEEpromMDB_Addr(uint8_t val)
 
 uint8_t ReadEEpromMDB_Addr(void)
 {
-	return DATAEE_ReadByte(MODBUSADDRES_EEPROM_ADDR);
+	uint8_t val =  DATAEE_ReadByte(MODBUSADDRES_EEPROM_ADDR);
     NVMCON1bits.NVMREG = 2;
+    return val;
 }
 
 void WriteEEpromTreshold(uint16_t val)
